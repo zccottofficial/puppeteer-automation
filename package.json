@@ -1,0 +1,15 @@
+{
+  "name": "my-extension-testing-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node src/tests/extension-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "puppeteer": "^23.6.0"
+  }
+}
