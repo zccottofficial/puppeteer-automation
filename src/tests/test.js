@@ -1,37 +1,47 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+  let browser;
   try {
     console.log("Launching browser...");
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: false, // Set to true for headless mode
       timeout: 120000, // Increase timeout if needed
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build,C:\\Users\\apr32\\OneDrive\\Desktop\\extension\\selectorHUB', // Add the paths to both extensions
-        '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build,C:\\Users\\apr32\\OneDrive\\Desktop\\extension\\selectorHUB' // Load both extensions
+        '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build', // Use the full path
+        '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build' // Use the full path
       ]
     });
 
     console.log("Browser launched successfully!");
     const page = await browser.newPage();
-    
+
     console.log("Navigating to Google...");
-    await page.goto('https://www.google.com', { waitUntil: 'load' });
-    console.log("Google page loaded successfully!");
+    await page.goto('https://kasinathanb.vercel.app/projects', { waitUntil: 'load' });
+    console.log("Scribe page loaded successfully!");
+
+    try {
+        console.log("Waiting for the element with XPath...");
+      // Wait for the element using XPath
+      await page.waitForXPath("//body/div[@id='root']/div/div/div/div[1]/div[1]/p[1]", { timeout: 20000 });
+      console.log("Found the element with XPath");
+
+      // Take a screenshot
+      await page.screenshot({ path: 'google.png' });
+      console.log("Screenshot taken");
+    } catch (error) {
+      console.log("Element not found:", error);
+    }
+
   } catch (error) {
     console.error("Error occurred:", error);
+  } finally {
+    // Close the browser if it was launched
+    if (browser) {
+      await browser.close();
+    }
   }
-  
-  try{
-    await page.waitForSelector("img[alt='Google']",{timeout:60000});
-    console.log(" found google ");
-    await page.screenshot({path: 'google.png'});
-    console.log("screenshot taken");
-  }catch(error){
-    console.log("not found");
-  }
-
 })();
