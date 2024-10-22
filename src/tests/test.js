@@ -20,13 +20,13 @@ const puppeteer = require('puppeteer');
     const page = await browser.newPage();
 
     console.log("Navigating to Google...");
-    await page.goto('https://kasinathanb.vercel.app/projects', { waitUntil: 'load' });
+    await page.goto('https://kasinathanb.vercel.app/', { waitUntil: 'load' });
     console.log("Scribe page loaded successfully!");
 
     try {
         console.log("Waiting for the element with XPath...");
       // Wait for the element using XPath
-      await page.waitForXPath("//body/div[@id='root']/div/div/div/div[1]/div[1]/p[1]", { timeout: 20000 });
+      await page.waitForSelector("#github-button", { timeout: 20000 });
       console.log("Found the element with XPath");
 
       // Take a screenshot
