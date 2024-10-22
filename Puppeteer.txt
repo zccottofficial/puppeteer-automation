@@ -1,0 +1,79 @@
+1. Browser Control Functions
+puppeteer.launch([options]): Launches a new browser instance. Options can include headless, args, timeout, etc.
+puppeteer.connect([options]): Connects to an existing browser instance.
+browser.newPage(): Opens a new tab or page in the browser.
+browser.close(): Closes the browser.
+browser.version(): Returns the browser's version.
+browser.userAgent(): Returns the user agent used by the browser.
+browser.pages(): Returns a list of all open pages in the browser.
+
+2. Page Functions
+page.goto(url, [options]): Navigates to a specific URL. The options can specify the timeout or wait conditions.
+page.reload([options]): Reloads the current page.
+page.setContent(html): Sets the HTML content of the page.
+page.evaluate(fn, ...args): Executes a function in the browser's context.
+page.waitForSelector(selector, [options]): Waits for an element matching the selector to appear on the page.
+page.waitForXPath(xpath, [options]): Waits for an element matching the XPath to appear on the page.
+page.click(selector, [options]): Clicks an element matching the selector.
+page.type(selector, text, [options]): Types text into an input field.
+page.keyboard.press(key, [options]): Simulates pressing a keyboard key.
+page.screenshot([options]): Takes a screenshot of the page.
+page.pdf([options]): Generates a PDF of the page.
+page.title(): Retrieves the page's title.
+page.url(): Gets the current URL of the page.
+page.setViewport(viewport): Sets the viewport size (width and height).
+page.setUserAgent(userAgent): Sets the user agent for the page.
+page.close(): Closes the page.
+
+3. Element Handle Functions
+These functions interact with elements returned by page.$() or page.$$() (single or multiple element selectors).
+
+elementHandle.click([options]): Clicks on the element.
+elementHandle.type(text, [options]): Types into the element.
+elementHandle.evaluate(fn, ...args): Evaluates a function in the context of the element.
+elementHandle.screenshot([options]): Takes a screenshot of the element.
+elementHandle.boundingBox(): Gets the element's bounding box.
+elementHandle.hover(): Moves the mouse over the element.
+
+4. Mouse Functions
+page.mouse.click(x, y, [options]): Clicks at the specified coordinates.
+page.mouse.move(x, y, [options]): Moves the mouse to the specified coordinates.
+page.mouse.down([options]): Simulates pressing the mouse button down.
+page.mouse.up([options]): Simulates releasing the mouse button.
+
+5. Keyboard Functions
+page.keyboard.down(key, [options]): Simulates pressing a key down.
+page.keyboard.up(key): Simulates releasing a key.
+page.keyboard.sendCharacter(character): Sends a character to the page.
+
+6. File Upload/Download Functions
+page.setFileChooserIntercepted(intercept): Allows handling file uploads.
+page.waitForFileChooser([options]): Waits for a file chooser to appear.
+
+7. Network Functions
+page.setRequestInterception(enabled): Enables or disables request interception.
+page.on('request', handler): Adds an event listener for page requests.
+page.on('response', handler): Adds an event listener for page responses.
+page.setExtraHTTPHeaders(headers): Sets additional HTTP headers for the requests.
+page.authenticate(credentials): Provides authentication credentials.
+
+8. Other Utility Functions
+page.exposeFunction(name, fn): Exposes a function to be called in the browser's context.
+page.addScriptTag([options]): Adds a script tag to the page.
+page.addStyleTag([options]): Adds a style tag to the page.
+
+9. Handling Dialogs
+page.on('dialog', handler): Listens for dialogs (alerts, prompts, etc.).
+dialog.accept([promptText]): Accepts a dialog, optionally providing text for a prompt.
+dialog.dismiss(): Dismisses a dialog.
+
+10. Handling Cookies and Storage
+page.setCookie(...cookies): Sets cookies on the page.
+page.deleteCookie(...cookies): Deletes cookies.
+page.cookies([urls]): Retrieves cookies.
+page.evaluate(() => localStorage.clear()): Clears local storage.
+
+11. Event Handling
+page.on('load', handler): Fires when the page has loaded.
+page.on('console', handler): Fires when a console message is logged.
+page.on('error', handler): Fires when an error occurs on the page.

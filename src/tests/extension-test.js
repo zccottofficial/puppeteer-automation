@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 
   const browser = await puppeteer.launch({
     headless: false, // Set to true for headless mode
-    timeout: 60000, // Increase timeout if needed
+    timeout: 120000, // Increase timeout if needed
     args: [
       '--no-sandbox', // Uncomment if necessary
       '--disable-setuid-sandbox', // Uncomment if necessary
