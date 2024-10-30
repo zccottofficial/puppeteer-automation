@@ -12,8 +12,8 @@ const puppeteer = require('puppeteer');
     args: [
       '--no-sandbox', // Uncomment if necessary
       '--disable-setuid-sandbox', // Uncomment if necessary
-      '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build', // Full path for disabling extensions
-      '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build' // Full path for loading the extension
+      '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\Extension\\puppeteer-automation\\src\\extensions\\build', // Full path for disabling extensions
+      '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\Extension\\puppeteer-automation\\src\\extensions\\build' // Full path for loading the extension
     ]
   });
 
@@ -92,17 +92,8 @@ const puppeteer = require('puppeteer');
     await page.click("#openReactApp");
     console.log("Clicked the #openReactApp button.");
 
-    // Verify if the specified element is visible
-    const isVisible = await page.evaluate(() => {
-      const element = document.querySelector("div[id='react-chrome-extension'] div div h1");
-      return element && window.getComputedStyle(element).display !== 'none';
-    });
-
-    if (isVisible) {
-      console.log("The element div[id='react-chrome-extension'] div div h1 is visible.");
-    } else {
-      console.log("The element div[id='react-chrome-extension'] div div h1 is not visible.");
-    }
+    await page.waitForSelector("svg[width='14']", { timeout: 10000 });
+    console.log("svg[width='14'] is present on the page.");
   } catch (error) {
     console.error("#firstMenu or #openReactApp not found within the timeout period.", error);
   }
