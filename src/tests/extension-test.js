@@ -3,76 +3,108 @@ const puppeteer = require('puppeteer');
 (async () => {
   console.log("Launching browser...");
 
+  // Define credentials
+  
+
   const browser = await puppeteer.launch({
-    headless: false, // Set to true for headless mode
-    timeout: 120000, // Increase timeout if needed
+    headless: true, // Set to true for headless mode
+    timeout: 120000,
     args: [
       '--no-sandbox', // Uncomment if necessary
       '--disable-setuid-sandbox', // Uncomment if necessary
-      '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build', // Use the full path
-      '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build' // Use the full path
+      '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build', // Full path for disabling extensions
+      '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\my-extension-testing-project\\src\\extensions\\build' // Full path for loading the extension
     ]
   });
 
   const page = await browser.newPage();
-  console.log("Navigating to the target page...");
+  console.log("Navigating to the login URL...");
 
-  await page.goto('https://kasinathanb.vercel.app/projects', { waitUntil: 'networkidle2', timeout: 60000 }); // Target webpage
-  console.log("Page loaded. Waiting for the button...");
+  // Navigate to the login URL
+  await page.goto('https://oscaremr.quipohealth.com/oscar/index.jsp', { waitUntil: 'networkidle2', timeout: 60000 });
+  console.log("Target URL loaded. Waiting for the input fields...");
 
-  // Wait for the button that launches the extension
+  // Find the username input and type the username
   try {
-    await page.waitForSelector('#openReactApp', { timeout: 10000 }); // Increase timeout if necessary
-    console.log("Button found. Clicking the button...");
-    await page.click('#openReactApp');
-    console.log("Button clicked.");
+    await page.waitForSelector('#username', { timeout: 10000 });
+    await page.type('#username', username);
+    console.log(`Typed '${username}' into the username field.`);
   } catch (error) {
-    console.error("Button not found within the timeout period.", error);
-    await browser.close(); // Close the browser if the button is not found
-    return; // Exit the script
+    console.error("Username field not found within the timeout period.", error);
   }
 
-  // Negative test case: Check that p:nth-child(1) is NOT present immediately after clicking
+  // Find the password input and type the password
   try {
-    const pExistsBefore = await page.$('p:nth-child(1)') !== null;
-    console.log("p:nth-child(1) presence before clicking the button: ", pExistsBefore ? "Found" : "Not Found");
-    if (pExistsBefore) {
-      console.error("Error: p:nth-child(1) should not be present immediately after launching the extension.");
+    await page.waitForSelector('#password2', { timeout: 10000 });
+    await page.type('#password2', password);
+    console.log(`Typed '${password}' into the password field.`);
+  } catch (error) {
+    console.error("Password field not found within the timeout period.", error);
+  }
+
+  // Find the PIN input and type the PIN
+  try {
+    await page.waitForSelector('#pin2', { timeout: 10000 });
+    await page.type('#pin2', pin);
+    console.log(`Typed '${pin}' into the PIN field.`);
+  } catch (error) {
+    console.error("PIN field not found within the timeout period.", error);
+  }
+
+  // Click the submit button
+  try {
+    await page.waitForSelector("button[name='submit']", { timeout: 10000 });
+    await page.click("button[name='submit']");
+    console.log("Clicked the submit button.");
+
+    // Wait for navigation to the next page after submitting the form
+    await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
+    console.log("Navigated after clicking submit.");
+  } catch (error) {
+    console.error("Submit button not found or navigation failed within the timeout period.", error);
+  }
+
+  const expectedUrl = 'https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=10&day=30&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1';
+  
+  try {
+    const currentUrl = page.url();
+    if (currentUrl === expectedUrl) {
+      console.log("Successfully navigated to the expected URL:", currentUrl);
     } else {
-      console.log("p:nth-child(1) is NOT present as expected after opening the extension.");
+      console.error("Failed to navigate to the expected URL. Current URL is:", currentUrl);
     }
   } catch (error) {
-    console.error("Error checking p:nth-child(1) presence.", error);
+    console.error("Error retrieving the current URL.", error);
   }
 
-  // Wait for the presence of the input box to type
-  const inputSelector = '#taskName';
+  // Check for the presence of the #firstMenu element
   try {
-    await page.waitForSelector(inputSelector, { timeout: 15000 });
-    console.log("Input box found. Typing 'hi'...");
-    await page.type(inputSelector, 'hi'); // Type "hi" into the #taskName input box
-    console.log("Text 'hi' typed into the input box.");
-  } catch (error) {
-    console.error("Input box not found within the timeout period.", error);
-  }
+    await page.waitForSelector('#firstMenu', { timeout: 10000 });
+    console.log("#firstMenu is present on the page.");
 
-  // Wait for the button to click next
-  const buttonSelector = 'body > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > button:nth-child(2)';
-  try {
-    await page.waitForSelector(buttonSelector, { timeout: 15000 });
-    console.log("Button found. Clicking the button...");
-    await page.click(buttonSelector);
-    console.log("Button clicked.");
-  } catch (error) {
-    console.error("Button not found within the timeout period.", error);
-  }
 
-  // Check for the presence of p:nth-child(1) after clicking the button
-  try {
-    await page.waitForSelector('p:nth-child(1)', { timeout: 15000 });
-    console.log("p:nth-child(1) found after clicking the button.");
+    await page.waitForSelector("a[href='http://www.raceconnect.ca/race-app/']", { timeout: 10000 });
+    console.log("a[href='http://www.raceconnect.ca/race-app/'] is present on the page.");
+    
+
+    // Find and click the #openReactApp button
+    await page.waitForSelector("#openReactApp", { timeout: 50000 });
+    await page.click("#openReactApp");
+    console.log("Clicked the #openReactApp button.");
+
+    // Verify if the specified element is visible
+    const isVisible = await page.evaluate(() => {
+      const element = document.querySelector("div[id='react-chrome-extension'] div div h1");
+      return element && window.getComputedStyle(element).display !== 'none';
+    });
+
+    if (isVisible) {
+      console.log("The element div[id='react-chrome-extension'] div div h1 is visible.");
+    } else {
+      console.log("The element div[id='react-chrome-extension'] div div h1 is not visible.");
+    }
   } catch (error) {
-    console.error("p:nth-child(1) not found after clicking the button, which is unexpected.", error);
+    console.error("#firstMenu or #openReactApp not found within the timeout period.", error);
   }
 
   // Close the browser after testing
@@ -83,3 +115,4 @@ const puppeteer = require('puppeteer');
     console.error("Error closing the browser.", error);
   }
 })();
+

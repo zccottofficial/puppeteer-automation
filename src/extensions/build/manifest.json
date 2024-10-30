@@ -3,7 +3,7 @@
   "name": "React Chrome Extension",
   "version": "1.0",
   "description": "A Chrome extension that injects a button and shows a React popup.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting","tabs"],
   "background": {
     "service_worker": "background.js"
   },
@@ -13,10 +13,15 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["static/js/*", "static/css/*", "/media/*"],
+      "resources": [
+        "static/js/main.js",
+        "static/css/main.css",
+        "media/logo512.png"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
+  "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

@@ -1,54 +1,251 @@
-// Inject the React app CSS when the page loads
-const reactAppCSS = document.createElement("link");
-reactAppCSS.rel = "stylesheet";
-reactAppCSS.href = chrome.runtime.getURL("static/css/main.css");
-document.head.appendChild(reactAppCSS);
+// Declared globally for sending to the React app
+let globalDemographicId = "";
 
-// Create the button element
-const mainDiv = document.getElementById("root");
-const injectButton = document.createElement("button");
-injectButton.id = "openReactApp";
-injectButton.className = "initButton";
-
-// Create the image element and append it inside the button
-const buttonImage = document.createElement("img");
-buttonImage.src = chrome.runtime.getURL("./media/logo512.png");
-buttonImage.alt = "Logo";
-buttonImage.style.width = "32px";
-buttonImage.style.height = "32px";
-injectButton.appendChild(buttonImage);
-
-// Append the button inside the root element
-mainDiv.appendChild(injectButton);
-
-// Event listener for button clicks
-injectButton.addEventListener("click", () => {
-    if (!document.getElementById("react-chrome-extension")) {
-        // Create and inject the div for the React app
-        const appDiv = document.createElement("div");
-        appDiv.id = "react-chrome-extension";
-        appDiv.classList = "react-ext-container custom-scrollbar";
-        document.body.appendChild(appDiv);
-
-        // Inject the React app script only if it hasn't been added already
-        if (!document.getElementById("react-app-script")) {
-            const reactAppScript = document.createElement("script");
-            reactAppScript.id = "react-app-script";
-            reactAppScript.src = chrome.runtime.getURL("static/js/main.js");
-            document.body.appendChild(reactAppScript);
-        }
+// Sending the ID to the React app with a delay
+const sendDemographicInfoWithDelay = (info) => {
+  setTimeout(() => {
+    if (info.demographicId && info.linkType) {
+      console.log("Sending demographic info to React app:", info);
+      window.postMessage(
+        {
+          type: "UPDATE_DEMOGRAPHIC_INFO",
+          demographicId: info.demographicId,
+          linkType: info.linkType,
+        },
+        "*"
+      );
+    } else {
+      console.log("No demographic info available to send.");
     }
+  }, 1000);
+};
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "UPDATE_REACT_APP") {
+    sendResponse({ status: "Success" });
+    console.log("Updating React app with data:", request.type);
+  }
 });
 
-// Global event listener for clicks, logging button clicks and image clicks
-document.addEventListener('click', (event) => {
-    // Check if the button or its child image was clicked
-    const target = event.target.closest('button, img');
-    if (target && (target.id === 'openReactApp' || target.tagName === 'IMG')) {
-        const buttonDetails = {
-            buttonText: target.innerText || 'Image',
-            buttonId: target.id || target.closest('button').id,  // Handle img inside button
-        };
-        chrome.runtime.sendMessage({ type: 'BUTTON_CLICKED', details: buttonDetails });
+function extractDemographicId(onClickString) {
+  const regex = /demographic_no\s*=\s*['"]?(\d+)['"]?/;
+  const match = onClickString ? onClickString.match(regex) : null;
+
+  if (match && match[1]) {
+    const id = match[1];
+    console.log("Extracted Demographic ID:", id);
+    globalDemographicId = id;
+
+    sendDemographicInfoWithDelay({
+      demographicId: globalDemographicId,
+      linkType: "",
+    });
+
+    return id;
+  } else {
+    return null;
+  }
+}
+
+const extractTypeFromTitle = (title) => {
+  // Split the title string into lines
+  const lines = title.split("\n");
+  for (const line of lines) {
+    // Check if the line contains 'type:'
+    if (line.trim().startsWith("type:")) {
+      // Extract the type value
+      return line.split(":")[1]?.trim() || "No Type";
     }
-});
+  }
+  return "No Type"; // Fallback if 'type:' not found
+};
+
+const handleClick = (event) => {
+  const target = event.target;
+
+  const targetTable = document.querySelector("table");
+  if (!targetTable || !targetTable.contains(target)) {
+    return;
+  }
+
+  const clickedElementDetails = {
+    tagName: target.tagName,
+    id: target.id || "No ID",
+    text: target.innerText,
+    href: target.tagName === "A" ? target.href : undefined,
+    className: target.className || "No Class",
+    dataAttributes: getDataAttributes(target),
+  };
+
+  const parentDiv = target.closest("div");
+  if (parentDiv) {
+    const apptLinkElement = parentDiv.querySelector(".apptLink");
+    if (apptLinkElement) {
+      const onClickValue = apptLinkElement.getAttribute("onclick");
+      const demographicId = onClickValue
+        ? extractDemographicId(onClickValue)
+        : "No Demographic ID";
+      const title = apptLinkElement.getAttribute("title") || "No Title";
+      const linkType = extractTypeFromTitle(title); // Extract type from title
+
+      const apptLinkDetails = {
+        tagName: apptLinkElement.tagName,
+        id: apptLinkElement.id || "No ID",
+        className: apptLinkElement.className || "No Class",
+        dataAttributes: getDataAttributes(apptLinkElement),
+        innerText: apptLinkElement.innerText,
+        href:
+          apptLinkElement.tagName === "A" ? apptLinkElement.href : "No HREF",
+        onClick: onClickValue || "No onClick",
+        demographicId: demographicId,
+        title: title,
+        linkType: linkType,
+        timestamp: Date.now(),
+      };
+
+      // Save demographic ID globally
+      globalDemographicId = demographicId;
+
+      // Send demographic info with delay
+      sendDemographicInfoWithDelay({
+        demographicId: demographicId,
+        linkType: linkType,
+      });
+    } else {
+      console.log("No apptLink element found in the parent div.");
+    }
+  } else {
+    console.log("No parent div found.");
+  }
+
+  chrome.runtime.sendMessage({
+    type: "ELEMENT_CLICKED",
+    payload: clickedElementDetails,
+  });
+};
+
+function getDataAttributes(element) {
+  const dataAttrs = {};
+  Array.from(element.attributes).forEach((attr) => {
+    if (attr.name.startsWith("data-")) {
+      dataAttrs[attr.name] = attr.value;
+    }
+  });
+  return dataAttrs;
+}
+
+const injectStylesheet = () => {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = chrome.runtime.getURL("static/css/main.css");
+  document.head.appendChild(link);
+};
+
+const createButton = () => {
+  const button = document.createElement("button");
+  button.id = "openReactApp";
+  button.className = "initButton";
+
+  const img = document.createElement("img");
+  img.src = chrome.runtime.getURL("./media/logo512.png");
+  img.alt = "Logo";
+  img.style.width = "32px";
+  img.style.height = "32px";
+  button.appendChild(img);
+
+  const targetContainer = document.body.querySelector("div") || document.body;
+  targetContainer.appendChild(button);
+  button.addEventListener("click", createReactChromeExtension);
+};
+
+const createReactChromeExtension = () => {
+  if (!document.getElementById("react-chrome-extension")) {
+    const appDiv = document.createElement("div");
+    appDiv.id = "react-chrome-extension";
+    appDiv.className = "react-ext-container custom-scrollbar";
+    appDiv.setAttribute("data-demographic-id", globalDemographicId);
+    document.body.appendChild(appDiv);
+    loadReactAppScript();
+  } else {
+    console.log("React app is already loaded.");
+  }
+};
+
+const loadReactAppScript = () => {
+  const reactAppScript = document.createElement("script");
+  reactAppScript.src = chrome.runtime.getURL("static/js/main.js");
+  reactAppScript.onload = () => {
+    console.log("React app script loaded successfully.");
+  };
+  reactAppScript.onerror = () =>
+    console.error("Failed to load the React app script.");
+  document.body.appendChild(reactAppScript);
+};
+
+const replaceInitiateConsultationWithButton = () => {
+  const elements = document.querySelectorAll(
+    '[onclick^="initiateConsultation"]'
+  );
+
+  elements.forEach((element) => {
+    const imgSrc = element.querySelector("img")
+      ? element.querySelector("img").src
+      : null;
+    const elementText = element.innerText;
+
+    if (imgSrc) {
+      const anchor = document.createElement("a");
+      anchor.href = "#";
+      anchor.className = "videoCallAnchor";
+
+      const img = document.createElement("img");
+      img.src = imgSrc;
+      img.alt = "Video Call Icon";
+      img.className = "videoCallImage";
+      img.style.width = "14px";
+      img.style.height = "14px";
+      img.style.marginBottom = "-2px";
+
+      anchor.appendChild(img);
+
+      anchor.addEventListener("click", function (event) {
+        event.preventDefault();
+        const closestDiv = this.closest("div");
+        const onClickValue = closestDiv.getAttribute("onclick");
+        const demographicId = extractDemographicId(onClickValue);
+        // Send the element's text content to React or backend
+        // Initialize React Chrome Extension
+        createReactChromeExtension();
+      });
+
+      // Replace the original element with the anchor containing the image
+      element.parentNode.replaceChild(anchor, element);
+    } else {
+      console.log("No image found to replace element.");
+    }
+  });
+};
+
+const observeDOMChanges = () => {
+  const observer = new MutationObserver(() => {
+    replaceInitiateConsultationWithButton();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+};
+
+const initContentScript = () => {
+  injectStylesheet();
+  createButton();
+  replaceInitiateConsultationWithButton();
+  observeDOMChanges();
+};
+
+// Event listener for clicks
+document.addEventListener("click", handleClick);
+
+// Initialize the content script
+initContentScript();
