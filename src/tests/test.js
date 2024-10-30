@@ -82,4 +82,7 @@ const puppeteer = require('puppeteer');
   } catch (error) {
     console.error("Error closing the browser.", error);
   }
+
+
+  
 })();
