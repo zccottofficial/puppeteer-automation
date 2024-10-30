@@ -12,10 +12,10 @@ const puppeteer = require('puppeteer');
     headless: true, // Set to true for headless mode
     timeout: 120000,
     args: [
-      '--no-sandbox', // Uncomment if necessary
-      '--disable-setuid-sandbox', // Uncomment if necessary
-      '--disable-extensions-except=C:\\Users\\apr32\\OneDrive\\Desktop\\Extension\\puppeteer-automation\\src\\extensions\\build', // Full path for disabling extensions
-      '--load-extension=C:\\Users\\apr32\\OneDrive\\Desktop\\Extension\\puppeteer-automation\\src\\extensions\\build' // Full path for loading the extension
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-extensions-except=./src/extensions/build', // Relative path for disabling extensions
+      '--load-extension=./src/extensions/build' // Relative path for loading the extension
     ]
   });
 
