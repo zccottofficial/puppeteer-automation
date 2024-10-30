@@ -4,9 +4,9 @@ const puppeteer = require('puppeteer');
   console.log("Launching browser...");
 
   // Define credentials
-  const username = 'Support';
-  const password = 'Quip0he@lth2022';
-  const pin = '9007';
+  const username = 'Suppor';
+  const password = 'Quip0he22';
+  const pin = '907';
 
   const browser = await puppeteer.launch({
     headless: true, // Set to true for headless mode
