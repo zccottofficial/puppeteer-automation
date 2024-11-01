@@ -1,10 +1,7 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-  console.log("Launching browser...");
-
-
-  
+  console.log("Launching browser...");  
   const browser = await puppeteer.launch({
     headless: false, // Set to true for headless mode
     timeout: 120000, // Increase timeout if needed
