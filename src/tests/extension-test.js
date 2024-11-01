@@ -18,10 +18,7 @@ const browser = await puppeteer.launch({
         '--no-sandbox',
         '--disable-setuid-sandbox',
         `--disable-extensions-except=${extensionPath}`,
-        '--disable-extensions-except=./src/extensions/build',
         `--load-extension=${extensionPath}`,
-        '--load-extension=./src/extensions/build' // Use the variable for disabling extensions
-         // Use the same variable for loading the extension
     ]
 });
 
