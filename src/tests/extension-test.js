@@ -1,12 +1,15 @@
 const puppeteer = require('puppeteer');
+require('dotenv').config();
 
 (async () => {
   console.log("Launching browser...");
 
   // Define credentials
-  const username = 'Suppor';
-  const password = 'Quip0he22';
-  const pin = '907';
+  const username = process.env.USERNAME1;
+  const password = process.env.PASSWORD;
+  const pin = process.env.PIN;
+
+  console.log(username, password, pin);
 
   const browser = await puppeteer.launch({
     headless: true, // Set to true for headless mode
