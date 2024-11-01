@@ -4,6 +4,11 @@ require('dotenv').config();
 (async () => {
   console.log("Launching browser...");
 
+
+  // const username = process.env.USERNAME1;
+  // const password = process.env.PASSWORD;
+  // const pin = process.env.PIN;
+
   // Define credentials
   const username = 'Support';
   const password = 'Quip0he@lth2022';
@@ -69,15 +74,13 @@ require('dotenv').config();
     console.error("Submit button not found or navigation failed within the timeout period.", error);
   }
 
-
-  // url changes everyday 
+  // url changes every day
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure two digits
   const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure two digits
 
   const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${year}&month=${month}&day=${day}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
-
 
   try {
     const currentUrl = page.url();
@@ -95,14 +98,12 @@ require('dotenv').config();
     await page.waitForSelector('#firstMenu', { timeout: 10000 });
     console.log("#firstMenu is present on the page.");
 
-
     await page.waitForSelector("a[href='http://www.raceconnect.ca/race-app/']", { timeout: 10000 });
     console.log("a[href='http://www.raceconnect.ca/race-app/'] is present on the page.");
-    
 
     // Find and click the #openReactApp button
-    await page.waitForSelector("#openReactApp", { timeout: 50000 });
-    await page.click("#openReactApp1");
+    await page.waitForSelector("#openReactApp1", { timeout: 50000 });
+    await page.click("#openReactApp");
     console.log("Clicked the #openReactApp button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
@@ -119,7 +120,3 @@ require('dotenv').config();
     console.error("Error closing the browser.", error);
   }
 })();
-
-
-
-
