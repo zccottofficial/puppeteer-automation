@@ -35,6 +35,7 @@ require('dotenv').config();
       console.log(`Typed '${value}' into the field: ${selector}`);
     } catch (error) {
       console.error(`Field ${selector} not found within the timeout period.`, error);
+      throw error; // Throw the error to stop execution if filling fails
     }
   };
 
@@ -54,6 +55,8 @@ require('dotenv').config();
     console.log("Navigated after clicking submit.");
   } catch (error) {
     console.error("Submit button not found or navigation failed within the timeout period.", error);
+    await browser.close(); // Close the browser on failure
+    return; // Exit the script on error
   }
 
   // Generate expected URL for today
@@ -67,6 +70,8 @@ require('dotenv').config();
       console.log("Successfully navigated to the expected URL:", currentUrl);
     } else {
       console.error("Failed to navigate to the expected URL. Current URL is:", currentUrl);
+      await browser.close(); // Close the browser on failure
+      return; // Exit the script on error
     }
   } catch (error) {
     console.error("Error retrieving the current URL.", error);
