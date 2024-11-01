@@ -5,9 +5,9 @@ require('dotenv').config();
   console.log("Launching browser...");
 
   // Define credentials
-  const username = process.env.USERNAME1;
-  const password = process.env.PASSWORD;
-  const pin = process.env.PIN;
+  const username = 'Support';
+  const password = 'Quip0he@lth2022';
+  const pin = '9007';
 
   console.log(username, password, pin);
 
@@ -69,8 +69,16 @@ require('dotenv').config();
     console.error("Submit button not found or navigation failed within the timeout period.", error);
   }
 
-  const expectedUrl = 'https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=10&day=30&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1';
-  
+
+  // url changes everyday 
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure two digits
+  const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure two digits
+
+  const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${year}&month=${month}&day=${day}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
+
+
   try {
     const currentUrl = page.url();
     if (currentUrl === expectedUrl) {
