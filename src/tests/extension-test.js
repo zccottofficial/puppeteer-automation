@@ -6,9 +6,9 @@ require('dotenv').config();
   console.log("Launching browser...");
 
   // Define credentials (consider keeping these in environment variables for security)
-  const username = process.env.USERNAME1 || 'Suppor t';
-  const password = process.env.PASSWORD || 'Quip0he@lth2022';
-  const pin = process.env.PIN || '9007';
+  const username = process.env.USERNAME1 ;
+  const password = process.env.PASSWORD ;
+  const pin = process.env.PIN ;
 
   const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
 
