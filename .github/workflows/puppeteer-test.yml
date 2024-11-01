@@ -13,14 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step to check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step to set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
 
+      # Step to install system dependencies required for Puppeteer
       - name: Install system dependencies for Puppeteer
         run: |
           sudo apt-get update
@@ -33,29 +36,33 @@ jobs:
             libx11-xcb1 \
             libdbus-glib-1-2 \
             libxtst6 \
-            libxss1 \
             fonts-liberation \
             libappindicator3-1 \
             libasound2
 
+      # Step to install Node.js project dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
         run: |
           set -e  # Stop the script on error
-          node src/tests/extension-test.js  # Run your Puppeteer test
-          
+          node src/tests/extension-test.js  # Specify your Puppeteer test file
+
+      # Step to check if the tests failed and log a message
       - name: Check test results
         if: ${{ failure() }}
-        run: echo "Tests failed. Check the logs for details."  # Log if tests fail
+        run: echo "Tests failed. Check the logs for details."
 
+      # Step to log a success message if tests passed
       - name: Success Message
         if: ${{ success() }}
         run: echo "All tests passed successfully!"
 
+      # Optional notification step for failed tests
       - name: Notify Failure (Optional)
         if: ${{ failure() }}
         run: |
           echo "Notifying failure through email or any other service..."
-          # Add your notification logic here if needed
+          # You can integrate your notification logic here if needed
