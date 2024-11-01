@@ -91,7 +91,7 @@ const browser = await puppeteer.launch({
 
     // Find and click the #openReactApp button
     await page.waitForSelector("#openReactApp", { timeout: 50000 });
-    await page.click("#openReactApp");
+    await page.click("#openReactApp1");
     console.log("Clicked the #openReactApp1 button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
