@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 
 require('dotenv').config();
 
+
 (async () => {
   console.log("Launching browser...");
 
