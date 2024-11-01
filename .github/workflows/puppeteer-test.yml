@@ -53,3 +53,9 @@ jobs:
       - name: Success Message
         if: ${{ success() }}
         run: echo "All tests passed successfully!"
+
+      - name: Notify Failure (Optional)
+        if: ${{ failure() }}
+        run: |
+          echo "Notifying failure through email or any other service..."
+          # Add your notification logic here if needed

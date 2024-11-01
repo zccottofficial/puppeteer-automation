@@ -4,17 +4,10 @@ require('dotenv').config();
 (async () => {
   console.log("Launching browser...");
 
-
-  // const username = process.env.USERNAME1;
-  // const password = process.env.PASSWORD;
-  // const pin = process.env.PIN;
-
-  // Define credentials
-  const username = 'Support';
-  const password = 'Quip0he@lth2022';
-  const pin = '9007';
-
-  console.log(username, password, pin);
+  // Define credentials (consider keeping these in environment variables for security)
+  const username = process.env.USERNAME1 || 'Support';
+  const password = process.env.PASSWORD || 'Quip0he@lth2022';
+  const pin = process.env.PIN || '9007';
 
   const browser = await puppeteer.launch({
     headless: true, // Set to true for headless mode
@@ -34,32 +27,21 @@ require('dotenv').config();
   await page.goto('https://oscaremr.quipohealth.com/oscar/index.jsp', { waitUntil: 'networkidle2', timeout: 60000 });
   console.log("Target URL loaded. Waiting for the input fields...");
 
-  // Find the username input and type the username
-  try {
-    await page.waitForSelector('#username', { timeout: 10000 });
-    await page.type('#username', username);
-    console.log(`Typed '${username}' into the username field.`);
-  } catch (error) {
-    console.error("Username field not found within the timeout period.", error);
-  }
+  // Helper function to fill input fields
+  const fillInput = async (selector, value) => {
+    try {
+      await page.waitForSelector(selector, { timeout: 10000 });
+      await page.type(selector, value);
+      console.log(`Typed '${value}' into the field: ${selector}`);
+    } catch (error) {
+      console.error(`Field ${selector} not found within the timeout period.`, error);
+    }
+  };
 
-  // Find the password input and type the password
-  try {
-    await page.waitForSelector('#password2', { timeout: 10000 });
-    await page.type('#password2', password);
-    console.log(`Typed '${password}' into the password field.`);
-  } catch (error) {
-    console.error("Password field not found within the timeout period.", error);
-  }
-
-  // Find the PIN input and type the PIN
-  try {
-    await page.waitForSelector('#pin2', { timeout: 10000 });
-    await page.type('#pin2', pin);
-    console.log(`Typed '${pin}' into the PIN field.`);
-  } catch (error) {
-    console.error("PIN field not found within the timeout period.", error);
-  }
+  // Fill in the login fields
+  await fillInput('#username', username);
+  await fillInput('#password2', password);
+  await fillInput('#pin2', pin);
 
   // Click the submit button
   try {
@@ -74,14 +56,11 @@ require('dotenv').config();
     console.error("Submit button not found or navigation failed within the timeout period.", error);
   }
 
-  // url changes every day
+  // Generate expected URL for today
   const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure two digits
-  const day = currentDate.getDate().toString().padStart(2, '0'); // Ensure two digits
+  const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${currentDate.getFullYear()}&month=${(currentDate.getMonth() + 1).toString().padStart(2, '0')}&day=${currentDate.getDate().toString().padStart(2, '0')}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
 
-  const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${year}&month=${month}&day=${day}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
-
+  // Verify the current URL
   try {
     const currentUrl = page.url();
     if (currentUrl === expectedUrl) {
@@ -103,13 +82,13 @@ require('dotenv').config();
 
     // Find and click the #openReactApp button
     await page.waitForSelector("#openReactApp1", { timeout: 50000 });
-    await page.click("#openReactApp");
-    console.log("Clicked the #openReactApp button.");
+    await page.click("#openReactApp1");  // Fixed button ID
+    console.log("Clicked the #openReactApp1 button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
     console.log("svg[width='14'] is present on the page.");
   } catch (error) {
-    console.error("#firstMenu or #openReactApp not found within the timeout period.", error);
+    console.error("#firstMenu or #openReactApp1 not found within the timeout period.", error);
   }
 
   // Close the browser after testing
