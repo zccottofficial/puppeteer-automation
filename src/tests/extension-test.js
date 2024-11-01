@@ -9,16 +9,21 @@ require('dotenv').config();
   const password = process.env.PASSWORD || 'Quip0he@lth2022';
   const pin = process.env.PIN || '9007';
 
-  const browser = await puppeteer.launch({
+  const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
+
+const browser = await puppeteer.launch({
     headless: true, // Set to true for headless mode
     timeout: 120000,
     args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-extensions-except=./src/extensions/build', // Relative path for disabling extensions
-      '--load-extension=./src/extensions/build' // Relative path for loading the extension
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        `--disable-extensions-except=${extensionPath}`,
+        '--disable-extensions-except=./src/extensions/build',
+        `--load-extension=${extensionPath}`,
+        '--load-extension=./src/extensions/build' // Use the variable for disabling extensions
+         // Use the same variable for loading the extension
     ]
-  });
+});
 
   const page = await browser.newPage();
   console.log("Navigating to the login URL...");
@@ -88,8 +93,8 @@ require('dotenv').config();
     console.log("a[href='http://www.raceconnect.ca/race-app/'] is present on the page.");
 
     // Find and click the #openReactApp button
-    await page.waitForSelector("#openReactApp1", { timeout: 50000 });
-    await page.click("#openReactApp1");
+    await page.waitForSelector("#openReactApp", { timeout: 50000 });
+    await page.click("#openReactApp");
     console.log("Clicked the #openReactApp1 button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
