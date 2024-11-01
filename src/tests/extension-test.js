@@ -6,7 +6,7 @@ require('dotenv').config();
   console.log("Launching browser...");
 
   // Define credentials (consider keeping these in environment variables for security)
-  const username = process.env.USERNAME1 || 'Support';
+  const username = process.env.USERNAME1 || 'Suppor t';
   const password = process.env.PASSWORD || 'Quip0he@lth2022';
   const pin = process.env.PIN || '9007';
 
