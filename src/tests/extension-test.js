@@ -91,13 +91,13 @@ const browser = await puppeteer.launch({
 
     // Find and click the #openReactApp button
     await page.waitForSelector("#openReactApp", { timeout: 50000 });
-    await page.click("#openReactApp1");
-    console.log("Clicked the #openReactApp1 button.");
+    await page.click("#openReactApp");
+    console.log("Clicked the #openReactApp button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
     console.log("svg[width='14'] is present on the page.");
   } catch (error) {
-    console.error("#firstMenu or #openReactApp1 not found within the timeout period.", error);
+    console.error("#firstMenu or #openReactApp not found within the timeout period.", error);
     await browser.close(); // Close the browser on failure
     process.exit(1); // Exit with a failure code
   }
