@@ -23,6 +23,7 @@ const browser = await puppeteer.launch({
     ]
 });
 
+
   const page = await browser.newPage();
   console.log("Navigating to the login URL...");
 
