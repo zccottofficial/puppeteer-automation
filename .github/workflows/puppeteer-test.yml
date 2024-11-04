@@ -1,4 +1,4 @@
-name: Puppeteer Tests
+name: Puppeteer
 
 on:
   push:
