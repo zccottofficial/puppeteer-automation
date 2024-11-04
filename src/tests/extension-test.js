@@ -38,7 +38,7 @@ const browser = await puppeteer.launch({
       console.log(`Typed '${value}' into the field: ${selector}`);
     } catch (error) {
       console.error(`Field ${selector} not found within the timeout period.`, error);
-      throw error; // Throw the error to stop execution if filling fails
+      throw error; 
     }
   };
 
@@ -58,28 +58,28 @@ const browser = await puppeteer.launch({
     console.log("Navigated after clicking submit.");
   } catch (error) {
     console.error("Error filling in the login fields or navigating:", error);
-    await browser.close(); // Close the browser on failure
-    process.exit(1); // Exit with a failure code
+    await browser.close(); 
+    process.exit(1); 
   }
 
   // Generate expected URL for today
   const currentDate = new Date();
   //const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${currentDate.getFullYear()}&month=${(currentDate.getMonth() + 1).toString().padStart(2, '0')}&day=${currentDate.getDate().toString().padStart(2, '0')}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
-  const expectedUrl ='https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=10&day=31&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1'
-  // Verify the current URL
+  const expectedUrl ='https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=11&day=3&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1'
+
   try {
     const currentUrl = page.url();
     if (currentUrl === expectedUrl) {
       console.log("Successfully navigated to the expected URL:", currentUrl);
     } else {
       console.error("Failed to navigate to the expected URL. Current URL is:", currentUrl);
-      await browser.close(); // Close the browser on failure
-      process.exit(1); // Exit with a failure code
+      await browser.close(); 
+      process.exit(1); 
     }
   } catch (error) {
     console.error("Error retrieving the current URL.", error);
-    await browser.close(); // Close the browser on failure
-    process.exit(1); // Exit with a failure code
+    await browser.close(); 
+    process.exit(1); 
   }
 
   // Check for the presence of the #firstMenu element
@@ -99,8 +99,8 @@ const browser = await puppeteer.launch({
     console.log("svg[width='14'] is present on the page.");
   } catch (error) {
     console.error("#firstMenu or #openReactApp not found within the timeout period.", error);
-    await browser.close(); // Close the browser on failure
-    process.exit(1); // Exit with a failure code
+    await browser.close(); 
+    process.exit(1); 
   }
 
   // Close the browser after testing
@@ -109,7 +109,7 @@ const browser = await puppeteer.launch({
     console.log("Browser closed.");
   } catch (error) {
     console.error("Error closing the browser.", error);
-    process.exit(1); // Exit with a failure code
+    process.exit(1);
   }
 
   
