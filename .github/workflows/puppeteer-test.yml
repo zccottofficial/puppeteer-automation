@@ -54,6 +54,10 @@ jobs:
 
       # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
+        env:  # Define environment variables here
+          USERNAME1: ${{ secrets.USERNAME1 }}  # Reference the secret
+          PASSWORD: ${{ secrets.PASSWORD }}      # Reference the secret
+          PIN: ${{ secrets.PIN }} 
         run: |
           set -e  # Stop the script on error
           node src/tests/extension-test.js  # Specify your Puppeteer test file
