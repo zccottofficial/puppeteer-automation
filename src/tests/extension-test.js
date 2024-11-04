@@ -7,7 +7,7 @@ require('dotenv').config();
 
   // Define credentials (consider keeping these in environment variables for security)
   const username = process.env.USERNAME ;
-  const password = process.env.PASSWORD ;
+  const password = process.env.PASSWORD1 ;
   const pin = process.env.PIN ;
 
   const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
