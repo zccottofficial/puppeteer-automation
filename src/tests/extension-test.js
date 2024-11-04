@@ -91,8 +91,8 @@ const browser = await puppeteer.launch({
     console.log("a[href='http://www.raceconnect.ca/race-app/'] is present on the page.");
 
     // Find and click the #openReactApp button
-    await page.waitForSelector("#openReactApp1", { timeout: 50000 });
-    await page.click("#openReactApp1");
+    await page.waitForSelector("#openReactApp", { timeout: 50000 });
+    await page.click("#openReactApp");
     console.log("Clicked the #openReactApp button.");
 
     await page.waitForSelector("svg[width='14']", { timeout: 10000 });
