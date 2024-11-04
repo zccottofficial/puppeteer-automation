@@ -14,8 +14,15 @@ jobs:
 
     steps:
       # Step to check out the code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      # Step to create the .env file using secrets
+      - name: Create .env file
+        uses: ozaytsev86/create-env-file@v1
+        with:
+          ENV_LLM_HOST: ${{ secrets.USERNAME1 }}
+          ENV_LLM_PORT: ${{ secrets.PASSWORD }}
+          ENV_TRANSCRIBE_HOST: ${{ secrets.PIN }}
 
       # Step to set up Node.js environment
       - name: Set up Node.js
@@ -65,4 +72,4 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "Notifying failure through email or any other service..."
-          # You can integrate your notification logic here if needed
+          # Integrate notification logic here if needed

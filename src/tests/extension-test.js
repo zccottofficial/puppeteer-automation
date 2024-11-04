@@ -113,6 +113,7 @@ const browser = await puppeteer.launch({
   }
 
   
+
   console.log("All tests passed successfully!");
   process.exit(0); // Exit successfully if everything went well
 })();
