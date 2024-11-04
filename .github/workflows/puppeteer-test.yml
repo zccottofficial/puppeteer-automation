@@ -11,19 +11,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      # Step to check out the code from the repository
-      - uses: actions/checkout@v2
 
-      # Step to create the .env file using secrets in src/tests
-      - name: Create .env file
-        uses: ozaytsev86/create-env-file@v1
-        with:
-          ENV_LLM_HOST: ${{ secrets.USERNAME1 }}
-          ENV_LLM_PORT: ${{ secrets.PASSWORD }}
-          ENV_TRANSCRIBE_HOST: ${{ secrets.PIN }}
-          file_name: src/tests/.env  # Specify the path for the .env file
+      # Step to check out the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       # Step to set up Node.js environment
       - name: Set up Node.js
@@ -77,4 +69,4 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "Notifying failure through email or any other service..."
-          # Integrate notification logic here if needed
+          # You can integrate your notification logic here if needed
