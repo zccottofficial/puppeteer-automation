@@ -15,7 +15,7 @@ const { verifyUrl, interactWithElements } = require('./navigation');
   const page = await browser.newPage();
 
   try {
-    
+
     await login(page, credentials);
 
     const targetDate = new Date(process.env.TARGET_DATE);
@@ -26,6 +26,7 @@ const { verifyUrl, interactWithElements } = require('./navigation');
     console.log("All tests passed successfully!");
   } catch (error) {
     console.error("An error occurred:", error);
+    process.exit(1);
   } finally {
     await browser.close();
     console.log("Browser closed.");
