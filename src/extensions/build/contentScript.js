@@ -1,7 +1,7 @@
 // Declared globally for sending to the React app
 let globalDemographicId = "";
 
-// Sending the ID to the React app with a delay
+// Sending the demographic info, linkType, title, and name to the React app with a delay
 const sendDemographicInfoWithDelay = (info) => {
   setTimeout(() => {
     if (info.demographicId && info.linkType) {
@@ -11,6 +11,7 @@ const sendDemographicInfoWithDelay = (info) => {
           type: "UPDATE_DEMOGRAPHIC_INFO",
           demographicId: info.demographicId,
           linkType: info.linkType,
+          name: info.name, // Send the name to React
         },
         "*"
       );
@@ -18,6 +19,12 @@ const sendDemographicInfoWithDelay = (info) => {
       console.log("No demographic info available to send.");
     }
   }, 1000);
+};
+
+// Function to extract the name from the title attribute
+const extractNameFromTitle = (title) => {
+  const lines = title.split("\n");
+  return lines[0].trim(); // The name is on the first line
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -39,6 +46,7 @@ function extractDemographicId(onClickString) {
     sendDemographicInfoWithDelay({
       demographicId: globalDemographicId,
       linkType: "",
+      name: "",
     });
 
     return id;
@@ -86,7 +94,10 @@ const handleClick = (event) => {
         ? extractDemographicId(onClickValue)
         : "No Demographic ID";
       const title = apptLinkElement.getAttribute("title") || "No Title";
-      const linkType = extractTypeFromTitle(title); // Extract type from title
+      const name = extractNameFromTitle(title);
+      console.log("Patient name:", name);
+
+      const linkType = extractTypeFromTitle(title);
 
       const apptLinkDetails = {
         tagName: apptLinkElement.tagName,
@@ -107,9 +118,11 @@ const handleClick = (event) => {
       globalDemographicId = demographicId;
 
       // Send demographic info with delay
+
       sendDemographicInfoWithDelay({
         demographicId: demographicId,
         linkType: linkType,
+        name: name, // Send the extracted name to React
       });
     } else {
       console.log("No apptLink element found in the parent div.");
@@ -117,7 +130,6 @@ const handleClick = (event) => {
   } else {
     console.log("No parent div found.");
   }
-
   chrome.runtime.sendMessage({
     type: "ELEMENT_CLICKED",
     payload: clickedElementDetails,
@@ -213,15 +225,28 @@ const replaceInitiateConsultationWithButton = () => {
         const closestDiv = this.closest("div");
         const onClickValue = closestDiv.getAttribute("onclick");
         const demographicId = extractDemographicId(onClickValue);
-        // Send the element's text content to React or backend
-        // Initialize React Chrome Extension
         createReactChromeExtension();
       });
 
-      // Replace the original element with the anchor containing the image
       element.parentNode.replaceChild(anchor, element);
     } else {
       console.log("No image found to replace element.");
+    }
+  });
+
+  // New code to target anchor tags with "walking.png" image source
+  const walkingElements = document.querySelectorAll(
+    'a img[src$="../images/walkin.png"]'
+  );
+
+  walkingElements.forEach((img) => {
+    const anchor = img.closest("a");
+    if (anchor) {
+      anchor.classList.add("walkinButton");
+      anchor.addEventListener("click", (event) => {
+        event.preventDefault();
+        createReactChromeExtension();
+      });
     }
   });
 };
