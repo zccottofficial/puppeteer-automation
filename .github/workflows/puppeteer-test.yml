@@ -53,7 +53,7 @@ jobs:
           PIN: ${{ secrets.PIN }} 
         run: |
           set -e  # Stop the script on error
-          node src/tests/extension-test.js  # Specify your Puppeteer test file
+          node src/tests/main.js  # Specify your Puppeteer test file
 
       # Step to check if the tests failed and log a message
       - name: Check test results
