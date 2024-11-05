@@ -65,8 +65,6 @@ const browser = await puppeteer.launch({
   
 
   // Generate expected URL for today
-  const currentDate = new Date();
-  //const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${currentDate.getFullYear()}&month=${(currentDate.getMonth() + 1).toString().padStart(2, '0')}&day=${currentDate.getDate().toString().padStart(2, '0')}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
   const expectedUrl ='https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=11&day=4&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1'
   try {
     const currentUrl = page.url();

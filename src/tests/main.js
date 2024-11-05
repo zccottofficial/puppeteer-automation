@@ -2,6 +2,7 @@
 require('dotenv').config();
 const { launchBrowser, login } = require('./login');
 const { verifyUrl, interactWithElements } = require('./navigation');
+const { findAppointment } = require('./oscarActions');
 
 (async () => {
   const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
@@ -23,6 +24,16 @@ const { verifyUrl, interactWithElements } = require('./navigation');
 
     await verifyUrl(page, expectedUrl);
     await interactWithElements(page);
+
+    console.log("Extension is available");
+
+    // Add more tests here if needed...
+    
+    await findAppointment(page);
+
+
+
+
     console.log("All tests passed successfully!");
   } catch (error) {
     console.error("An error occurred:", error);
