@@ -18,8 +18,8 @@ const { verifyUrl, interactWithElements } = require('./navigation');
     await login(page, credentials);
 
     const targetDate = new Date(process.env.TARGET_DATE);
-    const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${currentDate.getFullYear()}&month=${(currentDate.getMonth() + 1).toString().padStart(2, '0')}&day=${currentDate.getDate().toString().padStart(2, '0')}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
-
+    const expectedUrl = `https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=${targetDate.getFullYear()}&month=${(targetDate.getMonth() + 1).toString().padStart(2, '0')}&day=${targetDate.getDate().toString().padStart(2, '0')}&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1`;
+    
     await verifyUrl(page, expectedUrl);
     await interactWithElements(page);
     console.log("All tests passed successfully!");
