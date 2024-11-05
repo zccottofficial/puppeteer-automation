@@ -5,7 +5,7 @@ async function verifyUrl(page, expectedUrl) {
     if (currentUrl === expectedUrl) {
       console.log("Successfully navigated to the expected URL:", currentUrl);
     } else {
-      throw new Error(`Failed to navigate to the expected URL. Current URL is: ${currentUrl}`);
+      throw new Error(`Failed to navigate to the expected URL. Current URL is: ${currentUrl} - - expected URL is: ${expectedUrl}`);
     }
   }
   
