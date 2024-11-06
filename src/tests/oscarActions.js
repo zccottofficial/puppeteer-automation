@@ -33,6 +33,8 @@ async function findAppointment(page) {
       }
       
 
+      
+
       async function voiceCallFunction() {
         console.log('Executing voice call action...');
       }
