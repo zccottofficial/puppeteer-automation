@@ -46,8 +46,10 @@ jobs:
         run: npm install
 
       # Step to set the TARGET_DATE environment variable
-      - name: Set TARGET_DATE
-        run: echo "CURRENT_DATE=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Set TARGET_DATE in PST
+        run: |
+        TZ="America/Los_Angeles" date '+TARGET_DATE=%Y-%m-%d' >> $GITHUB_ENV
+
 
       # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
