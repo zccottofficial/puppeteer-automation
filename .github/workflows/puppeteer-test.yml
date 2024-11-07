@@ -45,17 +45,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step to set the TARGET_DATE environment variable
-      - name: Set TARGET_DATE
-        run: echo "CURRENT_DATE=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
+      # Step to set the TARGET_DATE environment variable in PST
+      - name: Set TARGET_DATE in PST
+        run: |
+          TZ="America/Los_Angeles" date '+TARGET_DATE=%Y-%m-%d' >> $GITHUB_ENV
 
       # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
-        env:  # Define environment variables here
-          USERNAME1: ${{ secrets.USERNAME1 }}  # Reference the secret
-          PASSWORD: ${{ secrets.PASSWORD }}      # Reference the secret
-          PIN: ${{ secrets.PIN }} 
-          TARGET_DATE: ${{ env.CURRENT_DATE }}  # Pass the CURRENT_DATE to TARGET_DATE
+        env:
+          USERNAME1: ${{ secrets.USERNAME1 }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          PIN: ${{ secrets.PIN }}
+          TARGET_DATE: ${{ env.TARGET_DATE }}  # Reference the TARGET_DATE variable
         run: |
           set -e  # Stop the script on error
           node src/tests/main.js  # Specify your Puppeteer test file
@@ -75,4 +76,4 @@ jobs:
         if: ${{ failure() }}
         run: |
           echo "Notifying failure through email or any other service..."
-          # You can integrate your notification logic here if needed
+          # Integrate your notification logic here if needed
