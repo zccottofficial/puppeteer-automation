@@ -1,4 +1,6 @@
 
+const { checkEMR } = require('./voiceCall')
+
 async function findAppointment(page) {
     await page.waitForSelector('#mygroup_no', { timeout: 10000 });
     console.log("#mygroup_no is present on the page.");
@@ -37,6 +39,8 @@ async function findAppointment(page) {
 
       async function voiceCallFunction() {
         console.log('Executing voice call action...');
+        await checkEMR(page); // call the checkEMR function from the voiceCall.js file
+
       }
       
       async function walkinFunction() {
