@@ -159,14 +159,14 @@ const createButton = () => {
   button.className = "initButton";
 
   const img = document.createElement("img");
-  img.src = chrome.runtime.getURL("./media/logo512.png");
+  img.src = chrome.runtime.getURL("./media/quipoLogo.png");
   img.alt = "Logo";
   img.style.width = "32px";
   img.style.height = "32px";
+  img.style.borderRadius = "50%";
   button.appendChild(img);
 
-  const targetContainer = document.body.querySelector("div") || document.body;
-  targetContainer.appendChild(button);
+  document.body.appendChild(button);
   button.addEventListener("click", createReactChromeExtension);
 };
 
@@ -174,7 +174,7 @@ const createReactChromeExtension = () => {
   if (!document.getElementById("react-chrome-extension")) {
     const appDiv = document.createElement("div");
     appDiv.id = "react-chrome-extension";
-    appDiv.className = "react-ext-container custom-scrollbar";
+    appDiv.className = "custom-scrollbar";
     appDiv.setAttribute("data-demographic-id", globalDemographicId);
     document.body.appendChild(appDiv);
     loadReactAppScript();

@@ -1,32 +1,41 @@
 {
   "manifest_version": 3,
-  "name": "React Chrome Extension",
+  "name": "Quipo Browser Extension",
   "version": "1.0",
   "description": "A Chrome extension that injects a button and shows a React popup.",
-  "permissions": ["activeTab", "scripting","tabs"],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "logo512.png"
+    "default_icon": {
+      "16": "quipoLogo.png",
+      "48": "quipoLogo.png",
+      "128": "quipoLogo.png"
+    }
   },
   "web_accessible_resources": [
     {
       "resources": [
         "static/js/main.js",
         "static/css/main.css",
-        "media/logo512.png"
+        "media/quipoLogo.png"
       ],
-      "matches": ["<all_urls>"]
+      "matches": ["https://oscaremr.quipohealth.com/*"]
     }
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": ["https://oscaremr.quipohealth.com/*"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://oscaremr.quipohealth.com/*"],
       "js": ["contentScript.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "icons": {
+    "16": "quipoLogo.png",
+    "48": "quipoLogo.png",
+    "128": "quipoLogo.png"
+  }
 }

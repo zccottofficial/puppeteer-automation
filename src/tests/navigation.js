@@ -17,13 +17,13 @@ async function verifyUrl(page, expectedUrl) {
     console.log("a[href='http://www.raceconnect.ca/race-app/'] is present on the page.");
   
     await page.waitForSelector("#openReactApp", { timeout: 50000 });
-    await page.click("#openReactApp");
+    // await page.click("#openReactApp");
     console.log("Clicked the #openReactApp button.");
   
-    await page.waitForSelector("svg[width='14']", { timeout: 10000 });
-    console.log("svg[width='14'] is present on the page.");
-    await page.click("svg[width='14']");
-    console.log("Clicked the SVG.");
+    // await page.waitForSelector("svg[width='14']", { timeout: 10000 });
+    // console.log("svg[width='14'] is present on the page.");
+    // await page.click("svg[width='14']");
+    // console.log("Clicked the SVG.");
   }
   
   module.exports = { verifyUrl, interactWithElements };

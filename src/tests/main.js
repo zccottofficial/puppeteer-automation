@@ -27,13 +27,7 @@ const { findAppointment } = require('./oscarActions');
 
     console.log("Extension is available");
 
-    // Add more tests here if needed...
-    
     await findAppointment(page);
-
-
-
-
     console.log("All tests passed successfully!");
   } catch (error) {
     console.error("An error occurred:", error);
