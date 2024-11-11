@@ -3,6 +3,20 @@ chrome.runtime.onInstalled.addListener(() => {
   console.log("Service worker installed.");
 });
 
+const myURLs = ["https://oscaremr.quipohealth.com/*"];
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (
+    changeInfo.status === "complete" &&
+    myURLs.some((url) => tab.url && tab.url.includes(url))
+  ) {
+    chrome.scripting.executeScript({
+      target: { tabId },
+      files: ["js/jquery-3.2.1.min.js", "js/sites_cs.js"],
+    });
+  }
+});
+
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "ELEMENT_CLICKED") {
