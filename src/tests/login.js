@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 async function launchBrowser(extensionPath) {
   return await puppeteer.launch({
     headless: true,
+    timeout: 1200000,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
