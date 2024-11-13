@@ -1,9 +1,9 @@
 async function checkEMR(page) {
-    await page.waitForSelector("body > div:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(31) > td:nth-child(3) > div:nth-child(1) > a:nth-child(12)");
-    console.log("Element with specified CSS selector found on the page.");
+    await page.waitForSelector(".encounterBtn",{ timeout: 5000 });
+    console.log("Element with encounterBtn selector found on the page.");
 
-    await page.click("body > div:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(31) > td:nth-child(3) > div:nth-child(1) > a:nth-child(12)");
-    console.log("Element with specified CSS selector clicked.");
+    await page.click(".encounterBtn");
+    console.log(" encounterBtn  clicked");
 
     await new Promise(resolve => setTimeout(resolve, 5000));
 
@@ -50,8 +50,8 @@ async function checkEMR(page) {
     // Check if the element's text content matches "JOE, ASHIK"
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
 
-    if (elementText === "ThomasEEE, JohnAAAAA") {
-        console.log("The element's text content is ThomasEEE, JohnAAAAA as expected.");
+    if (elementText === "AA, Rahul") {
+        console.log(`The element's text content is '${elementText}' as expected.`);
     } else {
         console.log(`The element's text content is '${elementText}', which does not match the expected value.`);
     }
