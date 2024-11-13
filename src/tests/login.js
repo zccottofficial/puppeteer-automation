@@ -4,12 +4,15 @@ const puppeteer = require('puppeteer');
 async function launchBrowser(extensionPath) {
   return await puppeteer.launch({
     headless: true,
-    timeout: 120000,
+    timeout: 1200000,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`,
+      '--disable-popup-blocking', // Disable popup blocking, which can cause popups in some cases
+      '--disable-notifications',  // Disable notifications
+      '--disable-infobars', // Prevents "Chrome is being controlled by automated software" message
     ],
   });
 }

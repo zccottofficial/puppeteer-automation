@@ -2,57 +2,71 @@
 const { checkEMR } = require('./voiceCall')
 
 async function findAppointment(page) {
-    await page.waitForSelector('#mygroup_no', { timeout: 10000 });
-    console.log("#mygroup_no is present on the page.");
+  await page.waitForSelector('#mygroup_no', { timeout: 10000 });
+  console.log("#mygroup_no is present on the page.");
 
-    await page.select('#mygroup_no', '_grp_Knight'); // change the value if the clinic is different
-    console.log("Selected successfully");
-    await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
-    console.log("page loading after selecting clinic");
+  await page.select('#mygroup_no', '_grp_Knight'); // change the value if the clinic is different
+  console.log("Selected successfully");
+  await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
+  console.log("page loading after selecting clinic");
 
-    await page.waitForSelector("tbody tr td[align='center'] b a:nth-child(1)", { timeout: 10000 });
-    console.log("page loaded correctly");
+  await page.waitForSelector("tbody tr td[align='center'] b a:nth-child(1)", { timeout: 10000 });
+  console.log("page loaded correctly");
 
-    const selectors = [
-        { selector: "img[alt='Video Call Icon']", name: "Voice", visible: false, action: voiceCallFunction },
-        { selector: "img[src='../images/walkin.png']", name: "Walkin", visible: false, action: walkinFunction },
-        { selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/videocall.png']", name: "Video", visible: false, action: videoFunction }
-      ];
-      
-      // First loop to check visibility
-      for (const item of selectors) {
-        const element = await page.$(item.selector); // Checking availability
-        item.visible = !!element; // Set visible to true if the element exists
-        console.log(`${item.name} element is ${item.visible ? 'available' : 'not available'} on the page.`);
-      }
-      
+  await page.waitForSelector("#theday", { timeout: 10000 });
+  console.log("Date display element is present on the page.")
 
-      for (const item of selectors) {
-        if (item.visible) {
-          console.log(`Calling function for ${item.name}.`);
-          await item.action(); // calling associated function
-        }
-      }
-      
+  // Set the value of the element to 'Mon, 2024-11-11'
+  await page.evaluate(() => {
+    const hiddenInput = document.querySelector("#storeday");
+    if (hiddenInput) {
+      hiddenInput.value = '2024-11-11';  // Set the date in the required format
+      hiddenInput.dispatchEvent(new Event('change'));  // Trigger the onchange event
+    }
+  });
+  console.log("Date successfully set to Mon, 2024-11-11.");
+  // await new Promise(resolve => setTimeout(resolve, 300000));
 
-      
+  const selectors = [
+    { selector: "img[alt='Video Call Icon']", name: "Voice", visible: false, action: voiceCallFunction },
+    { selector: "img[src='../images/walkin.png']", name: "Walkin", visible: false, action: walkinFunction },
+    { selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/videocall.png']", name: "Video", visible: false, action: videoFunction }
+  ];
 
-      async function voiceCallFunction() {
-        console.log('Executing voice call action...');
-        await checkEMR(page); // call the checkEMR function from the voiceCall.js file
+  // First loop to check visibility
+  for (const item of selectors) {
+    const element = await page.$(item.selector); // Checking availability
+    item.visible = !!element; // Set visible to true if the element exists
+    console.log(`${item.name} element is ${item.visible ? 'available' : 'not available'} on the page.`);
+  }
 
-      }
-      
-      async function walkinFunction() {
-        console.log('Executing walk-in action...');
-      }
-      
-      async function videoFunction() {
-        console.log('Executing video call action...');
-      }
-      
 
-      
+  for (const item of selectors) {
+    if (item.visible) {
+      console.log(`Calling function for ${item.name}.`);
+      await item.action(); // calling associated function
+    }
+  }
+
+
+
+
+  async function voiceCallFunction() {
+    console.log('Executing voice call action...');
+    await checkEMR(page); // call the checkEMR function from the voiceCall.js file
+
+  }
+
+  async function walkinFunction() {
+    console.log('Executing walk-in action...');
+  }
+
+  async function videoFunction() {
+    console.log('Executing video call action...');
+  }
+
+
+
 
 }
 

@@ -5,35 +5,56 @@ async function checkEMR(page) {
     await page.click("body > div:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(31) > td:nth-child(3) > div:nth-child(1) > a:nth-child(12)");
     console.log("Element with specified CSS selector clicked.");
 
-    await new Promise(resolve => setTimeout(resolve, 5000));   // Wait for 2 seconds to ensure the page has time to open
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
     // Get all open pages after the click
     const pages = await page.browser().pages();
-    
+
     // Find the newly opened page (the page URL will be different)
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
 
-    // // If the URL is the same, loop through pages to find the new one
-    // const currentUrl = await page.url();
-    // for (let i = pages.length - 1; i >= 0; i--) {
-    //     const potentialNewPage = pages[i];
-    //     const potentialUrl = await potentialNewPage.url();
-
-    //     // Compare the URLs: If different, it’s the new page
-    //     if (potentialUrl !== currentUrl) {
-    //         newPage = potentialNewPage;
-    //         break;
-    //     }
-    // }
-
-    // Print the URL of the newly opened page
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
 
-    // Wait for the new page to load and check for an element on that page
-    await newPage.waitForSelector("img[title='Click to upload new photo.']");  // Modify selector as needed
+    await newPage.waitForSelector("img[title='Click to upload new photo.']");
     console.log("Image with title 'Click to upload new photo.' found on the new page.");
 
+    newPage.on('dialog', async dialog => {
+        console.log(`Dialog detected: ${dialog.message()}`);
+        
+        if (dialog.message().includes("Do you wish to continue?")) {
+            await dialog.accept();
+            console.log("Dialog accepted.");
+        } else {
+            await dialog.dismiss();
+            console.log("Dialog dismissed.");
+        }
+    });
+
+    console.log("Outside reached after dialog handling.");
+
+    try {
+        await newPage.waitForNavigation({ waitUntil: 'networkidle0', timeout: 3000 });
+        console.log("Page loaded after dialog.");
+    } catch (error) {
+        console.log("Navigation failed:", error.message);
+    }
+    
+    await newPage.waitForSelector("img[title='Click to upload new photo.']",{ timeout: 5000 });
+    console.log("Image with title 'Click to upload new photo.' found on the new page.");
+
+    // Wait for the link element and check its content
+    await newPage.waitForSelector("a[title='Master Record']", { timeout: 30000 });
+    console.log("Element with title 'Master Record' and matching onclick attribute found.");
+
+    // Check if the element's text content matches "JOE, ASHIK"
+    const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
+
+    if (elementText === "ThomasEEE, JohnAAAAA") {
+        console.log("The element's text content is ThomasEEE, JohnAAAAA as expected.");
+    } else {
+        console.log(`The element's text content is '${elementText}', which does not match the expected value.`);
+    }
 }
 
 module.exports = { checkEMR };
