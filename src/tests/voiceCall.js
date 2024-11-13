@@ -1,8 +1,8 @@
 async function checkEMR(page) {
-    await page.waitForSelector(".encounterBtn",{ timeout: 5000 });
+    await page.waitForSelector(".encounterBtn")
     console.log("Element with encounterBtn selector found on the page.");
 
-    await page.click(".encounterBtn");
+    page.click(".encounterBtn");
     console.log(" encounterBtn  clicked");
 
     await new Promise(resolve => setTimeout(resolve, 5000));
