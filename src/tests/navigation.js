@@ -22,7 +22,7 @@ async function verifyUrl(page, expectedUrl) {
   
     // await page.waitForSelector("svg[width='14']", { timeout: 10000 });
     // console.log("svg[width='14'] is present on the page.");
-    // await page.click("svg[width='14']");
+    // page.click("svg[width='14']");
     // console.log("Clicked the SVG.");
   }
   

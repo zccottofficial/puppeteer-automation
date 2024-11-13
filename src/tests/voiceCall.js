@@ -5,18 +5,15 @@ async function checkEMR(page) {
     page.click(".encounterBtn");
     console.log(" encounterBtn  clicked");
 
-    await new Promise(resolve => setTimeout(resolve, 50000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
     console.log("awaited event");
 
 
     // Get all open pages after the click
     const pages = await page.browser().pages();
 
-    console.log(pages.length);
-    // Find the newly opened page (the page URL will be different)
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
 
-    console.log(newPage)
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
 
