@@ -10,6 +10,9 @@ async function launchBrowser(extensionPath) {
       '--disable-setuid-sandbox',
       `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`,
+      '--disable-popup-blocking', // Disable popup blocking, which can cause popups in some cases
+      '--disable-notifications',  // Disable notifications
+      '--disable-infobars', // Prevents "Chrome is being controlled by automated software" message
     ],
   });
 }
