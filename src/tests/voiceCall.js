@@ -34,6 +34,8 @@ async function checkEMR(page) {
     await newPage.waitForSelector("img[title='Click to upload new photo.']"); 
     console.log("Image with title 'Click to upload new photo.' found on the new page.");
 
+
+
 }
 
 module.exports = { checkEMR };

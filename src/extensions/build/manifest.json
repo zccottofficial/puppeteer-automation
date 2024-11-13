@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Quipo Browser Extension",
   "version": "1.0",
-  "description": "A Chrome extension that injects a button and shows a React popup.",
+  "description": "A browser extension for the quipo ai scribe.",
   "permissions": ["activeTab", "scripting", "tabs"],
   "background": {
     "service_worker": "background.js"
