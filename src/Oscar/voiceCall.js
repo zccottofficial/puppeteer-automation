@@ -12,8 +12,6 @@ async function checkEMR(page) {
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
 
-    await new Promise(resolve => setTimeout(resolve, 50000));
-    // Check the text of the "Master Record" element
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
     console.log(`Master Record element's text: ${elementText}`);
 }
