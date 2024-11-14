@@ -1,29 +1,41 @@
-//login.js
+const { waitForElement } = require('./browser-utils');
 
-const { CONFIG } = require('./config');
-const { BrowserManager } = require('./browser-utils');
+const LOGIN_URL = 'https://oscaremr.quipohealth.com/oscar/index.jsp';
+const TIMEOUTS = {
+  navigation: 60000,
+  element: 10000,
+};
 
-class LoginManager {
-  static async login(page, credentials) {
-    await page.goto(CONFIG.urls.login, { 
-      waitUntil: 'networkidle2', 
-      timeout: CONFIG.timeouts.navigation 
-    });
-
-    for (const [field, value] of Object.entries(credentials)) {
-      await this.#fillInput(page, CONFIG.selectors.login[field], value);
-    }
-
-    await page.click(CONFIG.selectors.login.submit);
-    await page.waitForNavigation({ 
-      waitUntil: 'networkidle2', 
-      timeout: CONFIG.timeouts.navigation 
-    });
+const SELECTORS = {
+  login: {
+    username: '#username',
+    password: '#password2',
+    pin: '#pin2',
+    submit: "button[name='submit']"
   }
+};
 
-  static async #fillInput(page, selector, value) {
-    await BrowserManager.waitForElement(page, selector, CONFIG.timeouts.element);
-    await page.type(selector, value);
-    console.log(`Input filled for ${selector}`);
-  }
+async function login(page, credentials) {
+  await page.goto(LOGIN_URL, { 
+    waitUntil: 'networkidle2', 
+    timeout: TIMEOUTS.navigation 
+  });
+
+  await fillInput(page, SELECTORS.login.username, credentials.username);
+  await fillInput(page, SELECTORS.login.password, credentials.password);
+  await fillInput(page, SELECTORS.login.pin, credentials.pin);
+
+  await page.click(SELECTORS.login.submit);
+  await page.waitForNavigation({ 
+    waitUntil: 'networkidle2', 
+    timeout: TIMEOUTS.navigation 
+  });
 }
+
+async function fillInput(page, selector, value) {
+  await waitForElement(page, selector, TIMEOUTS.element);
+  await page.type(selector, value);
+  console.log(`Input filled for ${selector}`);
+}
+
+module.exports = { login };

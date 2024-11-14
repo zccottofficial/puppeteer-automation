@@ -1,47 +1,35 @@
-const CONFIG = require('./config');
-const BrowserManager = require('./browser-utils');
-const LoginManager = require('./login');
+const { createBrowser } = require('./browser-utils');
+const { login } = require('./login');
 
-class AppointmentAutomation {
-  #browser;
-  #page;
+const EXTENSION_PATH = './src/extensions/build';
+const CREDENTIALS = {
+  username: 'your_username',
+  password: 'your_password',
+  pin: 'your_pin'
+};
 
-  async initialize() {
-    this.#browser = await BrowserManager.createBrowser(CONFIG.extensionPath);
-    this.#page = await this.#browser.newPage();
-  }
+async function runAutomation() {
+  let browser;
+  try {
+    browser = await createBrowser(EXTENSION_PATH);
+    const page = await browser.newPage();
 
-  async run() {
-    try {
-      await this.initialize();
-      await LoginManager.login(this.#page, CONFIG.credentials);
-      await this.#performAppointmentActions();
-    } catch (error) {
-      console.error("Automation failed:", error);
-      throw error;
-    } finally {
-      await this.cleanup();
-    }
-  }
+    await login(page, CREDENTIALS);
+    await performAppointmentActions(page);
 
-  async cleanup() {
-    if (this.#browser) {
-      await this.#browser.close();
+  } catch (error) {
+    console.error("Automation failed:", error);
+    process.exit(1);
+  } finally {
+    if (browser) {
+      await browser.close();
       console.log("Browser closed");
     }
   }
-
-  async #performAppointmentActions() {
-    // Implement appointment-specific logic here
-  }
 }
 
-// Usage
-(async () => {
-  const automation = new AppointmentAutomation();
-  try {
-    await automation.run();
-  } catch (error) {
-    process.exit(1);
-  }
-})();
+async function performAppointmentActions(page) {
+  // Implement appointment-specific actions here
+}
+
+runAutomation();

@@ -14,6 +14,8 @@ async function checkEMR(page) {
 
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
 
+    await newPage.waitForLoadState('load');
+
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
 
