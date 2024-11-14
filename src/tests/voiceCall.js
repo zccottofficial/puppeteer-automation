@@ -8,6 +8,8 @@ async function checkEMR(page) {
     await new Promise(resolve => setTimeout(resolve, 5000));
     console.log("awaited event");
 
+
+
     // Get all open pages after the click
     const pages = await page.browser().pages();
 
@@ -50,11 +52,12 @@ async function checkEMR(page) {
     // Check if the element's text content matches "JOE, ASHIK"
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
 
-    if (elementText === "AA, Rahul") {
+    if (elementText === "JOE, ASHIK") {
         console.log(`The element's text content is '${elementText}' as expected.`);
     } else {
         console.log(`The element's text content is '${elementText}', which does not match the expected value.`);
     }
+    
 }
 
 module.exports = { checkEMR };

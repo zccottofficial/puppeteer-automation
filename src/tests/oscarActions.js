@@ -11,21 +11,14 @@ async function findAppointment(page) {
   console.log("page loading after selecting clinic");
 
   await page.waitForSelector("tbody tr td[align='center'] b a:nth-child(1)", { timeout: 10000 });
-  console.log("page loaded correctly");
+  console.log("Page loaded correctly");
 
-  await page.waitForSelector("#theday", { timeout: 10000 });
-  console.log("Date display element is present on the page.")
+  // Navigate to the Nov 11 with specific date parameters
+  await page.goto('https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=11&day=11&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1', { waitUntil: 'load' });
+  console.log("Navigated to the specific appointment Nov 11.");
 
-  // Set the value of the element to 'Mon, 2024-11-11'
-  await page.evaluate(() => {
-    const hiddenInput = document.querySelector("#storeday");
-    if (hiddenInput) {
-      hiddenInput.value = '2024-11-11';  // Set the date in the required format
-      hiddenInput.dispatchEvent(new Event('change'));  // Trigger the onchange event
-    }
-  });
-  console.log("Date successfully set to Mon, 2024-11-11.");
-  // await new Promise(resolve => setTimeout(resolve, 300000));
+
+  await new Promise(resolve => setTimeout(resolve, 3000));
 
   const selectors = [
     { selector: "img[alt='Video Call Icon']", name: "Voice", visible: false, action: voiceCallFunction },

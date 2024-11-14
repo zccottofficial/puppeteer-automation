@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 
 async function launchBrowser(extensionPath) {
   return await puppeteer.launch({
-    headless: true,
+    headless: false,
     timeout: 1200000,
     args: [
       '--no-sandbox',
@@ -22,6 +22,10 @@ async function login(page, { username, password, pin }) {
 
   await page.goto(loginUrl, { waitUntil: 'networkidle2', timeout: 60000 });
   console.log("Target URL loaded. Waiting for input fields...");
+
+  const screenWidth = 1050;
+  const screenHeight = 670;
+  await page.setViewport({ width: screenWidth, height: screenHeight });
 
   const fillInput = async (selector, value) => {
     await page.waitForSelector(selector, { timeout: 10000 });

@@ -1,41 +1,36 @@
-const { waitForElement } = require('./browser-utils');
+// login.js
+const puppeteer = require('puppeteer');
+const { waitAndType, waitAndClick, waitForNavigation, navigateToUrl } = require('./utils');  // Import navigateToUrl
 
-const LOGIN_URL = 'https://oscaremr.quipohealth.com/oscar/index.jsp';
-const TIMEOUTS = {
-  navigation: 60000,
-  element: 10000,
-};
-
-const SELECTORS = {
-  login: {
-    username: '#username',
-    password: '#password2',
-    pin: '#pin2',
-    submit: "button[name='submit']"
-  }
-};
-
-async function login(page, credentials) {
-  await page.goto(LOGIN_URL, { 
-    waitUntil: 'networkidle2', 
-    timeout: TIMEOUTS.navigation 
-  });
-
-  await fillInput(page, SELECTORS.login.username, credentials.username);
-  await fillInput(page, SELECTORS.login.password, credentials.password);
-  await fillInput(page, SELECTORS.login.pin, credentials.pin);
-
-  await page.click(SELECTORS.login.submit);
-  await page.waitForNavigation({ 
-    waitUntil: 'networkidle2', 
-    timeout: TIMEOUTS.navigation 
-  });
+async function launchBrowser(extensionPath) {
+    return await puppeteer.launch({
+        headless: true,
+        timeout: 1200000,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            `--disable-extensions-except=${extensionPath}`,
+            `--load-extension=${extensionPath}`,
+            '--disable-popup-blocking',
+            '--disable-notifications',
+            '--disable-infobars',
+        ],
+    });
 }
 
-async function fillInput(page, selector, value) {
-  await waitForElement(page, selector, TIMEOUTS.element);
-  await page.type(selector, value);
-  console.log(`Input filled for ${selector}`);
+async function login(page, { username, password, pin }) {
+    const loginUrl = 'https://oscaremr.quipohealth.com/oscar/index.jsp';
+    const screenWidth = 1050;
+    const screenHeight = 670;
+    await page.setViewport({ width: screenWidth, height: screenHeight });
+
+    await navigateToUrl(page, loginUrl);  // Now navigateToUrl is defined
+
+    await waitAndType(page, '#username', username);
+    await waitAndType(page, '#password2', password);
+    await waitAndType(page, '#pin2', pin);
+    await waitAndClick(page, "button[name='submit']");
+    await waitForNavigation(page);
 }
 
-module.exports = { login };
+module.exports = { launchBrowser, login };
