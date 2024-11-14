@@ -8,6 +8,8 @@ async function checkEMR(page) {
     await new Promise(resolve => setTimeout(resolve, 5000));
     console.log("awaited event");
 
+
+    
     // Get all open pages after the click
     const pages = await page.browser().pages();
 
