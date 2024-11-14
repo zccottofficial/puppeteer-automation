@@ -9,11 +9,12 @@ async function checkEMR(page) {
     console.log("awaited event");
 
 
-    
+
     // Get all open pages after the click
     const pages = await page.browser().pages();
 
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
+    await newPage.waitForNavigation({ waitUntil: 'networkidle0' });
 
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
