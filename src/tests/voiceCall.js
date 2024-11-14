@@ -8,12 +8,10 @@ async function checkEMR(page) {
     await new Promise(resolve => setTimeout(resolve, 5000));
     console.log("awaited event");
 
+    // Get all open pages after the click
     const pages = await page.browser().pages();
-    console.log("Number of pages: " +  pages.length);
 
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
-
-    await newPage.waitForLoadState('load');
 
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
@@ -23,7 +21,7 @@ async function checkEMR(page) {
 
     newPage.on('dialog', async dialog => {
         console.log(`Dialog detected: ${dialog.message()}`);
-        
+
         if (dialog.message().includes("Do you wish to continue?")) {
             await dialog.accept();
             console.log("Dialog accepted.");
@@ -41,13 +39,15 @@ async function checkEMR(page) {
     } catch (error) {
         console.log("Navigation failed:", error.message);
     }
-    
+
     await newPage.waitForSelector("img[title='Click to upload new photo.']",{ timeout: 5000 });
     console.log("Image with title 'Click to upload new photo.' found on the new page.");
 
+    // Wait for the link element and check its content
     await newPage.waitForSelector("a[title='Master Record']", { timeout: 30000 });
     console.log("Element with title 'Master Record' and matching onclick attribute found.");
 
+    // Check if the element's text content matches "JOE, ASHIK"
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
 
     if (elementText === "AA, Rahul") {
@@ -58,5 +58,3 @@ async function checkEMR(page) {
 }
 
 module.exports = { checkEMR };
-
-
