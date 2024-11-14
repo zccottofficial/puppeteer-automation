@@ -34,7 +34,7 @@ async function login(page, { username, password, pin }) {
   await fillInput('#pin2', pin);
 
   await page.waitForSelector("button[name='submit']", { timeout: 10000 });
-  await page.click("button[name='submit']");
+  page.click("button[name='submit']");
   console.log("Clicked the submit button.");
 
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });

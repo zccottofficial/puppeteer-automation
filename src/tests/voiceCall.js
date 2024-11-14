@@ -1,17 +1,19 @@
 async function checkEMR(page) {
-    await page.waitForSelector("body > div:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(31) > td:nth-child(3) > div:nth-child(1) > a:nth-child(12)");
-    console.log("Element with specified CSS selector found on the page.");
+    await page.waitForSelector(".encounterBtn")
+    console.log("Element with encounterBtn selector found on the page.");
 
-    await page.click("body > div:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(31) > td:nth-child(3) > div:nth-child(1) > a:nth-child(12)");
-    console.log("Element with specified CSS selector clicked.");
+    page.click(".encounterBtn");
+    console.log(" encounterBtn  clicked");
 
     await new Promise(resolve => setTimeout(resolve, 5000));
+    console.log("awaited event");
 
-    // Get all open pages after the click
     const pages = await page.browser().pages();
+    console.log("Number of pages: " +  pages.length);
 
-    // Find the newly opened page (the page URL will be different)
     let newPage = pages[pages.length - 1];  // Assume the last page is the new one initially
+
+    await newPage.waitForLoadState('load');
 
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
@@ -43,15 +45,13 @@ async function checkEMR(page) {
     await newPage.waitForSelector("img[title='Click to upload new photo.']",{ timeout: 5000 });
     console.log("Image with title 'Click to upload new photo.' found on the new page.");
 
-    // Wait for the link element and check its content
     await newPage.waitForSelector("a[title='Master Record']", { timeout: 30000 });
     console.log("Element with title 'Master Record' and matching onclick attribute found.");
 
-    // Check if the element's text content matches "JOE, ASHIK"
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
 
-    if (elementText === "ThomasEEE, JohnAAAAA") {
-        console.log("The element's text content is ThomasEEE, JohnAAAAA as expected.");
+    if (elementText === "AA, Rahul") {
+        console.log(`The element's text content is '${elementText}' as expected.`);
     } else {
         console.log(`The element's text content is '${elementText}', which does not match the expected value.`);
     }
