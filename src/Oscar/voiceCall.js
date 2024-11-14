@@ -1,30 +1,21 @@
+// voiceCall.js
+const { waitAndClick, waitForNavigation } = require('./utils');
+
 async function checkEMR(page) {
-    await page.waitForSelector(".encounterBtn", { timeout: 10000 });
-    console.log("Element with encounterBtn selector found on the page.");
-  
-    await page.click(".encounterBtn");
+    await waitAndClick(page, ".encounterBtn");
     console.log("Clicked encounterBtn.");
-  
+
+    // Access all open pages after the click and assume the last page is the new one
     const pages = await page.browser().pages();
     const newPage = pages[pages.length - 1];
-  
-    newPage.on('dialog', async dialog => {
-      console.log(`Dialog detected: ${dialog.message()}`);
-      if (dialog.message().includes("Do you wish to continue?")) {
-        await dialog.accept();
-        console.log("Dialog accepted.");
-      } else {
-        await dialog.dismiss();
-        console.log("Dialog dismissed.");
-      }
-    });
-  
-    await newPage.waitForSelector("img[title='Click to upload new photo.']", { timeout: 5000 });
-    console.log("Image with title 'Click to upload new photo.' found on the new page.");
-  
+    // Log the URL of the new page
+    const newPageUrl = await newPage.url();
+    console.log("URL of the new page: " + newPageUrl);
+
+    await new Promise(resolve => setTimeout(resolve, 50000));
+    // Check the text of the "Master Record" element
     const elementText = await newPage.$eval("a[title='Master Record']", el => el.textContent.trim());
     console.log(`Master Record element's text: ${elementText}`);
-  }
-  
-  module.exports = { checkEMR };
-  
+}
+
+module.exports = { checkEMR };

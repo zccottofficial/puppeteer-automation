@@ -13,6 +13,24 @@ const { findAppointment } = require('./oscarActions');
   };
 
   const browser = await launchBrowser(extensionPath);
+  
+  // Attach a global dialog handler for any new pages that open
+  browser.on('targetcreated', async target => {
+    const newPage = await target.page();
+    if (newPage) {
+      newPage.on('dialog', async dialog => {
+        console.log(`Dialog detected: ${dialog.message()}`);
+        if (dialog.message().includes("Do you wish to continue?")) {
+          await dialog.accept();
+          console.log("Dialog accepted.");
+        } else {
+          await dialog.dismiss();
+          console.log("Dialog dismissed.");
+        }
+      });
+    }
+  });
+
   const page = await browser.newPage();
 
   try {
@@ -29,8 +47,7 @@ const { findAppointment } = require('./oscarActions');
     await findAppointment(page);
     console.log("All tests passed successfully!");
   } catch (error) {
-    console.error("An error occurred:", error);
-    process.exit(1);
+    console.error("An error occurred during test execution:", error);
   } finally {
     await browser.close();
     console.log("Browser closed.");

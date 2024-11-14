@@ -1,16 +1,16 @@
-async function findAppointment(page) {
-  await page.waitForSelector('#mygroup_no', { timeout: 10000 });
-  console.log("#mygroup_no is present on the page.");
+// oscarActions.js
+const { waitAndClick, navigateToUrl, waitForNavigation, waitAndCheck} = require('./utils');
+const { checkEMR } = require('./voiceCall');
 
-  await page.select('#mygroup_no', '_grp_Knight');
+async function findAppointment(page) {
+  await waitAndCheck(page, '#mygroup_no');
+  await page.select('#mygroup_no', '_grp_Knight'); // change the value if the clinic is different
   console.log("Clinic selected successfully");
 
-  await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
-  console.log("Page loaded after selecting clinic");
+  await waitForNavigation(page);
 
   const targetUrl = 'https://oscaremr.quipohealth.com/oscar/provider/providercontrol.jsp?year=2024&month=11&day=11&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1';
-  await page.goto(targetUrl, { waitUntil: 'load' });
-  console.log("Navigated to the specific appointment Nov 11.");
+  await navigateToUrl(page, targetUrl);
 
   await handleActions(page);
 }
@@ -26,9 +26,7 @@ async function handleActions(page) {
     const element = await page.$(item.selector);
     const visible = !!element;
     console.log(`${item.name} element is ${visible ? 'available' : 'not available'} on the page.`);
-    if (visible) {
-      await item.action(page);
-    }
+    if (visible) await item.action(page);
   }
 }
 

@@ -59,7 +59,7 @@ jobs:
           TARGET_DATE: ${{ env.TARGET_DATE }}  # Reference the TARGET_DATE variable
         run: |
           set -e  # Stop the script on error
-          node src/tests/main.js  # Specify your Puppeteer test file
+          node src/Oscar/main.js  # Specify your Puppeteer test file
 
       # Step to check if the tests failed and log a message
       - name: Check test results
