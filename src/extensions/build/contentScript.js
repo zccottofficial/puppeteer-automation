@@ -5,6 +5,7 @@ const CONFIG = {
     CONSULTATION_BUTTONS: '[onclick^="initiateConsultation"]',
     WALKIN_IMAGES: 'a img[src$="../images/walkin.png"]',
     REACT_APP: "#react-chrome-extension",
+    PHONE_NUMBER: "a.walkinButton + text() + a.attachmentBtn",
   },
   CLASSES: {
     VIDEO_CALL: "videoCallAnchor",
@@ -36,6 +37,53 @@ const createElementWithAttributes = (e, t = {}) => {
     );
   },
   extractors = {
+    extractPhoneNumber: (container) => {
+      try {
+        if (!container) {
+          throw new Error("Container not found.");
+        }
+
+        const nearButton =
+          container.querySelector(".walkinButton") ||
+          container.querySelector(".videoCallAnchor");
+
+        if (!nearButton) {
+          throw new Error("Button not found.");
+        }
+
+        let phoneNumber = nearButton.nextSibling;
+
+        while (
+          phoneNumber &&
+          phoneNumber.nodeType !== 1 &&
+          phoneNumber.nodeType !== 3
+        ) {
+          phoneNumber = phoneNumber.nextSibling;
+        }
+
+        if (!phoneNumber) {
+          throw new Error("Phone number not found next to the button.");
+        }
+
+        if (phoneNumber.nodeType === 3) {
+          phoneNumber = phoneNumber.textContent.trim();
+        }
+
+        if (phoneNumber.nodeType === 1) {
+          phoneNumber = phoneNumber.textContent.trim();
+        }
+
+        if (!phoneNumber) {
+          throw new Error("No valid phone number found.");
+        }
+
+        return phoneNumber;
+      } catch (error) {
+        console.error("Error extracting phone number:", error.message);
+        return null;
+      }
+    },
+
     demographicId: (e) => {
       const t = e?.match(/demographic_no\s*=\s*['"]?(\d+)['"]?/);
       return t
@@ -73,23 +121,34 @@ const createElementWithAttributes = (e, t = {}) => {
         )
       ) {
         const t = e.closest("div")?.querySelector(CONFIG.SELECTORS.APPT_LINK);
-        if (!t) return;
-        const n = t.getAttribute("onclick"),
-          r = t.getAttribute("title") || "No Title",
-          o = n ? extractors.demographicId(n) : "No Demographic ID",
-          i = extractors.nameFromTitle(r),
-          s = extractors.typeFromTitle(r);
-        messageHandlers.sendDemographicInfo({
-          demographicId: o,
-          linkType: s,
-          name: i,
-        }),
+        if (t) {
+          const phoneNumber = extractors.extractPhoneNumber(e.closest("div"));
+
+          if (phoneNumber) {
+            console.log("Phone Number found:", phoneNumber);
+          }
+
+          const n = t.getAttribute("onclick"),
+            r = t.getAttribute("title") || "No Title",
+            o = n ? extractors.demographicId(n) : "No Demographic ID",
+            i = extractors.nameFromTitle(r),
+            s = extractors.typeFromTitle(r);
+
+          messageHandlers.sendDemographicInfo({
+            demographicId: o,
+            linkType: s,
+            name: i,
+            phoneNumber: phoneNumber,
+          });
+
           messageHandlers.sendClickEvent({
             tagName: e.tagName,
             id: e.id || "No ID",
           });
+        }
       }
     },
+
     handleClick(e) {
       const t = e.currentTarget;
       t.classList.contains(CONFIG.CLASSES.VIDEO_CALL)
@@ -101,29 +160,39 @@ const createElementWithAttributes = (e, t = {}) => {
         : e.target.closest(CONFIG.SELECTORS.CONSULTATION_BUTTONS) &&
           clickHandlers.consultationButtonClick(e);
     },
+
     videoCall(e) {
       e.preventDefault(), console.log("Video Call Clicked:", e);
       const t = e.currentTarget
         .closest("div")
         ?.querySelector(CONFIG.SELECTORS.APPT_LINK);
+
+      const phoneNumber = extractors.extractPhoneNumber(
+        e.currentTarget.closest("div")
+      );
+
       if (t) {
         const e = t.getAttribute("onclick"),
           n = t.getAttribute("title") || "No Title",
           r = extractors.demographicId(e),
           o = extractors.nameFromTitle(n),
           i = extractors.typeFromTitle(n);
+
         messageHandlers.sendDemographicInfo({
           demographicId: r,
           name: o,
           linkType: i,
-        }),
-          createReactChromeExtension({
-            demographicId: r,
-            name: o,
-            linkType: i,
-          });
+          phoneNumber: phoneNumber,
+        });
+
+        createReactChromeExtension({
+          demographicId: r,
+          name: o,
+          linkType: i,
+        });
       } else createReactChromeExtension({ demographicId: globalDemographicId });
     },
+
     walkin(e) {
       e.preventDefault();
       const t = e.currentTarget
@@ -135,18 +204,21 @@ const createElementWithAttributes = (e, t = {}) => {
           r = extractors.demographicId(e),
           o = extractors.nameFromTitle(n),
           i = extractors.typeFromTitle(n);
+
         messageHandlers.sendDemographicInfo({
           demographicId: r,
           name: o,
           linkType: i,
-        }),
-          createReactChromeExtension({
-            demographicId: r,
-            name: o,
-            linkType: i,
-          });
+        });
+
+        createReactChromeExtension({
+          demographicId: r,
+          name: o,
+          linkType: i,
+        });
       } else createReactChromeExtension({});
     },
+
     consultationButtonClick(e) {
       e.preventDefault(), console.log("Consultation Button Clicked:", e);
       const t = e.target.closest(CONFIG.SELECTORS.CONSULTATION_BUTTONS),
@@ -155,19 +227,23 @@ const createElementWithAttributes = (e, t = {}) => {
         o = extractors.demographicId(n),
         i = extractors.nameFromTitle(r),
         s = extractors.typeFromTitle(r);
+
       messageHandlers.sendDemographicInfo({
         demographicId: o,
         name: i,
         linkType: s,
-      }),
-        createReactChromeExtension({ demographicId: o, name: i, linkType: s });
+      });
+
+      createReactChromeExtension({ demographicId: o, name: i, linkType: s });
     },
+
     initButton(e) {
       e.preventDefault(),
         console.log("Initialization Button Clicked:", e),
         createReactChromeExtension({ demographicId: globalDemographicId });
     },
   };
+
 const replaceConsultationButtons = () => {
     console.log("Replacing Consultation Buttons"),
       document
