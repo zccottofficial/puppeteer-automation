@@ -48,6 +48,7 @@ const { findAppointment } = require('./oscarActions');
     console.log("All tests passed successfully!");
   } catch (error) {
     console.error("An error occurred during test execution:", error);
+    process.exit(1);
   } finally {
     await browser.close();
     console.log("Browser closed.");
