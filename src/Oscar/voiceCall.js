@@ -12,9 +12,6 @@ async function checkEMR(page) {
     const newPageUrl = await newPage.url();
     console.log("URL of the new page: " + newPageUrl);
 
-
-    await newPage.waitForSelector("img[title='Click to upload new photo.']",{ timeout: 5000 });
-    console.log("Image with title 'Click to upload new photo.' found on the new page.");
     await newPage.waitForSelector("a[title='Master Record']", { timeout: 3000 });
     console.log("Element with title 'Master Record' and matching onclick attribute found.");
 

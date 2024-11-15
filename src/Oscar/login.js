@@ -4,7 +4,7 @@ const { waitAndType, waitAndClick, waitForNavigation, navigateToUrl } = require(
 
 async function launchBrowser(extensionPath) {
     return await puppeteer.launch({
-        headless: false,
+        headless: true,
         timeout: 1200000,
         args: [
             '--no-sandbox',
