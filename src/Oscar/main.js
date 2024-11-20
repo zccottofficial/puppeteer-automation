@@ -1,8 +1,8 @@
 // main.js
 require('dotenv').config();
-const { launchBrowser, login } = require('./login');
-const { verifyUrl, interactWithElements } = require('./navigation');
-const { findAppointment } = require('./oscarActions');
+const { launchBrowser, login } = require('./oscarWork.js/login');
+const { verifyUrl, interactWithElements } = require('./oscarWork.js/navigation');
+const { findAppointment } = require('./oscarWork.js/oscarActions');
 
 (async () => {
   const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
@@ -13,7 +13,7 @@ const { findAppointment } = require('./oscarActions');
   };
 
   const browser = await launchBrowser(extensionPath);
-  
+
   // Attach a global dialog handler for any new pages that open
   browser.on('targetcreated', async target => {
     const newPage = await target.page();

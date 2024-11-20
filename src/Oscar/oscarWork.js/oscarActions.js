@@ -1,6 +1,6 @@
 // oscarActions.js
-const { waitAndClick, navigateToUrl, waitForNavigation, waitAndCheck} = require('./utils');
-const { checkEMR } = require('./voiceCall');
+const { waitAndClick, navigateToUrl, waitForNavigation, waitAndCheck } = require('../utils/utils');
+const { checkEMR } = require('./enCounter');
 
 async function findAppointment(page) {
   await waitAndCheck(page, '#mygroup_no');
@@ -32,7 +32,6 @@ async function handleActions(page) {
 
 async function voiceCallFunction(page) {
   console.log('Executing voice call action...');
-  await checkEMR(page);
 }
 
 async function walkinFunction(page) {
