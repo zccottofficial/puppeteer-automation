@@ -1,5 +1,5 @@
 // navigation.js
-const { waitAndCheck } = require('./utils');
+const { waitAndCheck } = require('../utils/utils');
 
 async function verifyUrl(page, expectedUrl) {
   const currentUrl = page.url();

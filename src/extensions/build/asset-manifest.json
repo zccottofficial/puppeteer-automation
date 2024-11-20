@@ -2,6 +2,7 @@
   "files": {
     "main.css": "/static/css/main.css",
     "main.js": "/static/js/main.js",
+    "static/media/Roboto-Regular.ttf": "/static/media/Roboto-Regular..ttf",
     "static/media/profilePic.png": "/static/media/profilePic..png",
     "index.html": "/index.html",
     "main.css.map": "/static/css/main.css.map",

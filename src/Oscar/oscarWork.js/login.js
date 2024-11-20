@@ -1,6 +1,6 @@
 // login.js
 const puppeteer = require('puppeteer');
-const { waitAndType, waitAndClick, waitForNavigation, navigateToUrl } = require('./utils');  // Import navigateToUrl
+const { waitAndType, waitAndClick, waitForNavigation, navigateToUrl } = require('../utils/utils');  // Import navigateToUrl
 
 async function launchBrowser(extensionPath) {
     return await puppeteer.launch({
