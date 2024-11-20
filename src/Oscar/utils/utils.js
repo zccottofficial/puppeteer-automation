@@ -5,6 +5,7 @@ async function waitAndType(page, selector, text, timeout = 10000) {
     await page.type(selector, text);
     console.log(`Typed '${text}' into ${selector}`);
   }
+  
 
   async function waitAndCheck(page, selector, timeout = 10000) {
     await page.waitForSelector(selector, { timeout });
