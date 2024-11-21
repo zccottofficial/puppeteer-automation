@@ -7,12 +7,13 @@ const { findAppointment } = require('./oscarWork.js/oscarActions');
 (async () => {
   const extensionPath = process.env.EXTENSION_PATH || './src/extensions/build';
   const credentials = {
+    head: process.env.HEADLESS === 'true',
     username: process.env.USERNAME1,
     password: process.env.PASSWORD,
     pin: process.env.PIN,
   };
 
-  const browser = await launchBrowser(extensionPath);
+  const browser = await launchBrowser(extensionPath,head);
 
   // Attach a global dialog handler for any new pages that open
   browser.on('targetcreated', async target => {
