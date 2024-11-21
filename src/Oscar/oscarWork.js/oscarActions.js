@@ -1,6 +1,5 @@
 // oscarActions.js
-const { waitAndClick, navigateToUrl, waitForNavigation, waitAndCheck } = require('../utils/utils');
-const { checkEMR } = require('./enCounter');
+const { navigateToUrl, waitForNavigation, waitAndCheck } = require('../utils/utils');
 
 async function findAppointment(page) {
   await waitAndCheck(page, '#mygroup_no');
@@ -14,6 +13,9 @@ async function findAppointment(page) {
 
   await handleActions(page);
 }
+
+
+
 
 async function handleActions(page) {
   const selectors = [
