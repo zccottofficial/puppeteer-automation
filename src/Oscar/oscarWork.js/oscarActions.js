@@ -1,5 +1,6 @@
 // oscarActions.js
-const { navigateToUrl, waitForNavigation, waitAndCheck } = require('../utils/utils');
+const { navigateToUrl, waitForNavigation, waitAndCheck, waitAndClick } = require('../utils/utils');
+const { checkExtensionData } = require('../utils/helper');
 
 async function findAppointment(page) {
   await waitAndCheck(page, '#mygroup_no');
@@ -17,32 +18,36 @@ async function findAppointment(page) {
 async function handleActions(page) {
 
   const selectors = [
-    { name: "Patient 3", number: " (613) 456-0988 | ", selector: "img[alt='Video Call Icon']", name: "Voice", action: voiceCallFunction },
-    { name: "Patient 1", number: " (613) 454-6546 | ", selector: "img[src='../images/walkin.png']", name: "Walkin", action: walkinFunction },
-    { name: "Patient 2", number: " (613) 454-6546 | ", selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/videocall.png']", name: "Video", action: videoFunction }
+    { pname: "Joe,Ashik", number: " (613) 454-6546 | ", selector: "img[src='../images/walkin.png']", name: "Walkin", action: walkinFunction },
+    { pname: "Krishna,Abhinav", number: " (613) 454-6546 | ", selector: "img[alt='Video Call Icon']", name: "Video", action: videoFunction},
+    { pname: "Thomas,Priya", number: " (613) 456-0988 | ", selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/audio.png']", name: "Voice", action: voiceCallFunction }
   ];
-
+  
   for (const item of selectors) {
     const element = await page.$(item.selector);
     const visible = !!element;
     console.log(`${item.name} element is ${visible ? 'available' : 'not available'} on the page.`);
-    if (visible) await item.action(page, item.name, item.number);
+    if (visible) await item.action(page, item.pname, item.number, item.selector);
   }
 }
 
 
+async function walkinFunction(page,name,number,selector) {
+  console.log(` ${name} ${number}`);
+  await waitAndClick(page, selector);
+  await new Promise(resolve => setTimeout(resolve, 30000));
+  console.log('Extension launched')
+  await checkExtensionData(page, name, number);
+  console.log('Executed walk-in action...');
+}
 
-async function voiceCallFunction(page,name,number) {
+
+async function voiceCallFunction(page,name,number,selector) {
   console.log(` ${name} ${number}`);
   console.log('Executing voice call action...');
 }
 
-async function walkinFunction(page,name,number) {
-  console.log(` ${name} ${number}`);
-  console.log('Executing walk-in action...');
-}
-
-async function videoFunction(page,name,number) {
+async function videoFunction(page,name,number,selector) {
   console.log(` ${name} ${number}`);
   console.log('Executing video call action...');
 }
