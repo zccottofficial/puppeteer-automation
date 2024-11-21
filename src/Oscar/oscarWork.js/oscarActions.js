@@ -1,6 +1,6 @@
 // oscarActions.js
 const { navigateToUrl, waitForNavigation, waitAndCheck, waitAndClick } = require('../utils/utils');
-const { checkExtensionData } = require('../utils/helper');
+const { checkExtensionData, launchExtesion} = require('../utils/helper');
 
 async function findAppointment(page) {
   await waitAndCheck(page, '#mygroup_no');
@@ -27,28 +27,24 @@ async function handleActions(page) {
     const element = await page.$(item.selector);
     const visible = !!element;
     console.log(`${item.name} element is ${visible ? 'available' : 'not available'} on the page.`);
-    if (visible) await item.action(page, item.pname, item.number, item.selector);
+    if (visible){
+      await launchExtesion(page, item.pname, item.number, item.selector);
+      await item.action(page, item.pname, item.number, item.selector);
+    }
   }
 }
 
 
 async function walkinFunction(page,name,number,selector) {
-  console.log(` ${name} ${number}`);
-  await waitAndClick(page, selector);
-  await new Promise(resolve => setTimeout(resolve, 30000));
-  console.log('Extension launched')
-  await checkExtensionData(page, name, number);
   console.log('Executed walk-in action...');
 }
 
 
 async function voiceCallFunction(page,name,number,selector) {
-  console.log(` ${name} ${number}`);
   console.log('Executing voice call action...');
 }
 
 async function videoFunction(page,name,number,selector) {
-  console.log(` ${name} ${number}`);
   console.log('Executing video call action...');
 }
 
