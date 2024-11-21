@@ -53,7 +53,6 @@ jobs:
       # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
         env:
-          HEADLESS: ${{ secrets.HEADLESS }}
           USERNAME1: ${{ secrets.USERNAME1 }}
           PASSWORD: ${{ secrets.PASSWORD }}
           PIN: ${{ secrets.PIN }}
