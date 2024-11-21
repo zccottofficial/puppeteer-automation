@@ -14,33 +14,36 @@ async function findAppointment(page) {
   await handleActions(page);
 }
 
-
-
-
 async function handleActions(page) {
+
   const selectors = [
-    { selector: "img[alt='Video Call Icon']", name: "Voice", action: voiceCallFunction },
-    { selector: "img[src='../images/walkin.png']", name: "Walkin", action: walkinFunction },
-    { selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/videocall.png']", name: "Video", action: videoFunction }
+    { name: "Patient 3", number: " (613) 456-0988 | ", selector: "img[alt='Video Call Icon']", name: "Voice", action: voiceCallFunction },
+    { name: "Patient 1", number: " (613) 454-6546 | ", selector: "img[src='../images/walkin.png']", name: "Walkin", action: walkinFunction },
+    { name: "Patient 2", number: " (613) 454-6546 | ", selector: "img[src='https://oscaremr.quipohealth.com/oscar/images/videocall.png']", name: "Video", action: videoFunction }
   ];
 
   for (const item of selectors) {
     const element = await page.$(item.selector);
     const visible = !!element;
     console.log(`${item.name} element is ${visible ? 'available' : 'not available'} on the page.`);
-    if (visible) await item.action(page);
+    if (visible) await item.action(page, item.name, item.number);
   }
 }
 
-async function voiceCallFunction(page) {
+
+
+async function voiceCallFunction(page,name,number) {
+  console.log(` ${name} ${number}`);
   console.log('Executing voice call action...');
 }
 
-async function walkinFunction(page) {
+async function walkinFunction(page,name,number) {
+  console.log(` ${name} ${number}`);
   console.log('Executing walk-in action...');
 }
 
-async function videoFunction(page) {
+async function videoFunction(page,name,number) {
+  console.log(` ${name} ${number}`);
   console.log('Executing video call action...');
 }
 
