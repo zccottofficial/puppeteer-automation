@@ -49,7 +49,7 @@ my-extension-testing-project/
 └── README.md                   # Documentation for your project
 ```
 
-## Demo Video
-Click the thumbnail below to watch the demo video:
+## Commit Graph Video
+Click the thumbnail below to watch the Commit Graph Video:
 
 [![Demo Video](https://img.youtube.com/vi/n4buHnfDWEA/0.jpg)](https://www.youtube.com/watch?v=n4buHnfDWEA)
