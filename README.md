@@ -52,7 +52,8 @@ my-extension-testing-project/
 ## Demo Video
 Click the thumbnail below to watch the demo video:
 
-[![Demo Video](https://img.youtube.com/vi/n4buHnfDWEA/0.jpg)](https://youtu.be/n4buHnfDWEA)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/n4buHnfDWEA?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 
 
 
