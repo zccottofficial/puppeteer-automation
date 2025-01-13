@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
       # Step to check out the code from the repository
@@ -39,7 +39,7 @@ jobs:
             libxtst6 \
             fonts-liberation \
             libappindicator3-1
-            
+
       # Step to install Node.js project dependencies
       - name: Install dependencies
         run: npm install
