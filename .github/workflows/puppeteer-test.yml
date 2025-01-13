@@ -40,16 +40,13 @@ jobs:
             fonts-liberation \
             libappindicator3-1 \
             libasound2
-
       # Step to install Node.js project dependencies
       - name: Install dependencies
         run: npm install
-
       # Step to set the TARGET_DATE environment variable in PST
       - name: Set TARGET_DATE in PST
         run: |
           TZ="America/Los_Angeles" date '+TARGET_DATE=%Y-%m-%d' >> $GITHUB_ENV
-
       # Step to run the Puppeteer tests
       - name: Run Puppeteer tests
         env:
