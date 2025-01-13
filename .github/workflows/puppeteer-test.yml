@@ -29,16 +29,20 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libnss3 \
-            libatk-bridge2.0-0 \
-            libxss1 \
-            libgconf-2-0 \
-            libgtk-3-0 \
-            libx11-xcb1 \
-            libdbus-glib-1-2 \
-            libxtst6 \
-            fonts-liberation \
-            libappindicator3-1
+              ca-certificates \
+              fonts-liberation \
+              libasound2 \
+              libatk1.0-0 \
+              libcups2 \
+              libgbm1 \
+              libnspr4 \
+              libpango-1.0-0 \
+              libxcomposite1 \
+              libxcursor1 \
+              libxrandr2 \
+              libxi6 \
+              libpangocairo-1.0-0 \
+              xdg-utils
 
       # Step to install Node.js project dependencies
       - name: Install dependencies
