@@ -1,11 +1,3 @@
-/*!
-	Copyright (c) 2018 Jed Watson.
-	Licensed under the MIT License (MIT), see
-	http://jedwatson.github.io/classnames
-*/
-
-/*! For license information please see videosdk.js.LICENSE.txt */
-
 /**
  * @license
   Copyright (c) 2008, Adobe Systems Incorporated
@@ -250,6 +242,15 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license agora-rtc-react
+ * @version 2.3.0
+ *
+ * Copyright (c) Agora, Inc.
+ *
+ * This source code is licensed under the MIT license.
  */
 
 /**

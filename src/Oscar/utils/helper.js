@@ -17,4 +17,10 @@ async function launchExtesion(page, name, number, selector){
     await checkExtensionData(page, name, number);
 }
 
-module.exports = { checkExtensionData, launchExtesion }
+async function onLogin(page, emailInput, numberInput) {
+    
+}
+
+
+
+module.exports = { checkExtensionData, launchExtesion, onLogin }

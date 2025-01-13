@@ -234,40 +234,7 @@ const createElementWithAttributes = (e, t = {}) => {
           if (sessionID && !globalCallStatus) {
             if (i === "Phone call") {
               globalCallStatus = true;
-              navigator.mediaDevices
-                .getUserMedia({ audio: true })
-                .then((stream) => {
-                  const audioTrack = stream.getAudioTracks()[0];
-                  if (audioTrack && audioTrack.readyState === "live") {
-                    stream.getTracks().forEach((track) => track.stop());
-
-                    makePhoneCall();
-                  } else {
-                    console.error("Microphone access is not granted.");
-                    alert(
-                      "Microphone access is required for this feature to work."
-                    );
-                  }
-                })
-                .catch((error) => {
-                  switch (error.name) {
-                    case "NotAllowedError":
-                      console.error("Microphone access denied by the user.");
-                      alert("Please allow microphone access to proceed.");
-                      break;
-                    case "NotFoundError":
-                      console.error("No microphone device found.");
-                      alert(
-                        "No microphone detected. Please connect a microphone."
-                      );
-                      break;
-                    default:
-                      console.error("Error accessing the microphone:", error);
-                      alert(
-                        "An error occurred while accessing the microphone."
-                      );
-                  }
-                });
+              makePhoneCall();
             }
           } else {
             console.error("No session id found or call already in progress");
@@ -474,24 +441,6 @@ const muteHandler = (e) => {
 };
 
 const initCall = () => {
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then((stream) => {
-      stream.getTracks().forEach((track) => track.stop());
-      console.log("Microphone access granted.");
-    })
-    .catch((error) => {
-      switch (error.name) {
-        case "NotAllowedError":
-          console.error("Microphone access denied by the user.");
-          break;
-        case "NotFoundError":
-          console.error("No microphone device found.");
-          break;
-        default:
-          console.error("Error accessing the microphone:", error);
-      }
-    });
   chrome.runtime.sendMessage({
     type: "SEND_PHONE_NUMBER",
     phoneNumber: globalPhoneNumber,
@@ -534,7 +483,9 @@ callControlsObserver.observe(document.body, {
 });
 
 window.addEventListener("beforeunload", () => {
-  globalCallStatus = false;
-  chrome.runtime.sendMessage({ type: "HANGUP_CALL" });
-  sessionStorage.setItem("sessionStatus",false)
+  if (globalCallStatus) {
+    chrome.runtime.sendMessage({ type: "HANGUP_CALL" });
+    globalCallStatus = false;
+  }
+  sessionStorage.setItem("sessionStatus", false);
 });

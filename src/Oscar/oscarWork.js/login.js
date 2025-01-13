@@ -14,6 +14,8 @@ async function launchBrowser(extensionPath, head) {
             '--disable-popup-blocking',
             '--disable-notifications',
             '--disable-infobars',
+            '--use-fake-ui-for-media-stream', // Automatically allow media permissions
+            '--use-fake-device-for-media-stream',
         ],
     });
 }

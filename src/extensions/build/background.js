@@ -99,13 +99,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // Called when the service worker is installed
 chrome.runtime.onInstalled.addListener(() => {
-  // chrome.windows.create({
-  //   url: chrome.runtime.getURL("offScreen.html"),
-  //   type: "popup",
-  //   width: 800, // Set the desired width
-  //   height: 300, // Set the desired height
-  // });
-  console.log("Extension installed. Showing permissions popup.");
+  console.log("Extension installed. Checking permissions...");
+
+  // Check if microphone permission is not granted
+  navigator.permissions
+    .query({ name: "microphone" }) // Use Permissions API to check microphone access
+    .then((permissionStatus) => {
+      if (permissionStatus.state !== "granted") {
+        // Permission not granted, navigate to permissions page
+        console.log(
+          "Microphone permission not granted. Navigating to permissions page."
+        );
+
+        chrome.tabs.create({
+          url: chrome.runtime.getURL("offScreen.html"), // Replace with your permissions page
+        });
+      } else {
+        console.log("Microphone permission is already granted.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error checking microphone permission:", error);
+    });
 });
 
 const myURLs = ["https://oscaremr.quipohealth.com/*"];
