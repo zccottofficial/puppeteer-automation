@@ -32,14 +32,14 @@ jobs:
             libnss3 \
             libatk-bridge2.0-0 \
             libxss1 \
-            libgconf-2-4 \
+            libgconf-2-0 \
             libgtk-3-0 \
             libx11-xcb1 \
             libdbus-glib-1-2 \
             libxtst6 \
             fonts-liberation \
-            libappindicator3-1 \
-            libasound2
+            libappindicator3-1
+            
       # Step to install Node.js project dependencies
       - name: Install dependencies
         run: npm install
